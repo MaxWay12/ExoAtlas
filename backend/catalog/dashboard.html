@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Каталог экзопланет</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.5 Inter, system-ui, sans-serif; background: #10151d; color: #e6edf4; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1150px; margin: auto; padding: 32px clamp(16px, 4vw, 48px); }
+    header, .actions, .pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    header, .pagination { justify-content: space-between; }
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: -.04em; }
+    h2 { font-size: 1.15rem; }
+    a, .text-button { color: #a4e5cd; }
+    .muted { color: #a9b6c5; }
+    .panel { margin-top: 22px; padding: 20px; border: 1px solid #2e3b49; border-radius: 14px; background: #161f2a; }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)); gap: 12px; }
+    label { display: grid; gap: 5px; font-size: .88rem; }
+    input, select, button { font: inherit; }
+    input, select, button { border: 1px solid #425366; border-radius: 7px; padding: 8px 10px; background: #101720; color: inherit; }
+    input, select { width: 100%; min-width: 0; }
+    button { cursor: pointer; }
+    button:disabled { cursor: default; opacity: .5; }
+    button[type=submit] { background: #a4e5cd; color: #102822; border-color: #a4e5cd; font-weight: 600; }
+    :focus-visible { outline: 2px solid #a4e5cd; outline-offset: 3px; }
+    .actions, .pagination { margin-top: 14px; }
+    #status, #catalog { margin-top: 8px; }
+    .error { color: #ffb7a8; }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: .9rem; text-align: left; }
+    th, td { border-bottom: 1px solid #2e3b49; padding: 10px; white-space: nowrap; }
+    th { color: #a9b6c5; }
+    .text-button { background: transparent; border: 0; padding: 0; text-align: left; text-decoration: underline; }
+    details { margin-top: 14px; }
+    summary { cursor: pointer; }
+    ul { margin-bottom: 0; }
+    dialog { width: min(580px, calc(100vw - 24px)); max-height: 85vh; background: #161f2a; border: 1px solid #425366; color: inherit; border-radius: 14px; padding: 22px; }
+    dialog::backdrop { background: #090d14bb; }
+    dl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+    dt { color: #a9b6c5; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+<main>
+  <header><h1>Каталог экзопланет</h1><a href="/docs">Swagger</a></header>
+  <p id="catalog" class="muted">Проверяем каталог…</p>
+  <form id="filters" class="panel">
+    <div class="filters">
+      <label>Планета или звезда<input name="q" type="search" placeholder="TRAPPIST-1" maxlength="150"></label>
+      <label>Метод открытия<select name="method"><option value="">Все методы</option></select></label>
+      <label>Год от<input name="year_from" type="number" min="0" max="9999"></label>
+      <label>Год до<input name="year_to" type="number" min="0" max="9999"></label>
+      <label>Радиус от (R⊕)<input name="radius_min" type="number" min="0" step="any"></label>
+      <label>Радиус до (R⊕)<input name="radius_max" type="number" min="0" step="any"></label>
+      <label>Расстояние от (пк)<input name="distance_min" type="number" min="0" step="any"></label>
+      <label>Расстояние до (пк)<input name="distance_max" type="number" min="0" step="any"></label>
+      <label>Сортировка<select name="sort"><option value="name">Имя</option><option value="year">Год</option><option value="radius">Радиус</option><option value="distance">Расстояние</option></select></label>
+      <label>Порядок<select name="order"><option value="asc">По возрастанию</option><option value="desc">По убыванию</option></select></label>
+    </div>
+    <div class="actions"><button type="submit">Применить</button><button type="reset">Сбросить</button></div>
+  </form>
+  <p id="status" role="status"></p>
+  <section class="panel" aria-labelledby="results">
+    <h2 id="results">Планеты</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Планета</th><th>Звезда</th><th>Год</th><th>Метод</th><th>Радиус (R⊕)</th><th>Расстояние (пк)</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button id="previous" disabled>Назад</button><span id="page"></span><button id="next" disabled>Далее</button>
+    </div>
+  </section>
+  <section class="panel" aria-labelledby="statistics">
+    <h2 id="statistics">Статистика по фильтрам</h2>
+    <p id="totals" class="muted"></p>
+    <details open><summary>По методу открытия</summary><ul id="methods"></ul></details>
+    <details><summary>По году открытия</summary><ul id="years"></ul></details>
+  </section>
+</main>
+<dialog id="card" aria-labelledby="card-title">
+  <header><h2 id="card-title">Карточка</h2><form method="dialog"><button>Закрыть</button></form></header>
+  <div id="card-content" aria-live="polite"></div>
+</dialog>
+<script>
+  const get = (id) => document.getElementById(id);
+  const form = get('filters');
+  const status = get('status');
+  const rows = get('rows');
+  const card = get('card');
+  const cardContent = get('card-content');
+  const pageSize = 20;
+  const count = new Intl.NumberFormat('ru');
+  const decimal = new Intl.NumberFormat('ru', { maximumSignificantDigits: 7 });
+  let filters = new URLSearchParams();
+  let sort = 'name';
+  let order = 'asc';
+  let page = 1;
+  let listRequest;
+  let cardRequest;
+
+  function node(tag, text) {
+    const element = document.createElement(tag);
+    element.textContent = text;
+    return element;
+  }
+
+  function value(data) {
+    return data == null ? '—' : typeof data === 'number' ? decimal.format(data) : data;
+  }
+
+  function action(text, handler) {
+    const button = node('button', text);
+    button.type = 'button';
+    button.className = 'text-button';
+    button.addEventListener('click', handler);
+    return button;
+  }
+
+  async function request(path, params = new URLSearchParams(), signal) {
+    const url = new URL('/api/' + path, location.origin);
+    url.search = params.toString();
+    const response = await fetch(url, { signal });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      const detail = Array.isArray(body.detail)
+        ? body.detail.map((entry) => entry.msg).join('; ')
+        : body.detail;
+      throw new Error(path + ' · HTTP ' + response.status + (detail ? ' · ' + detail : ''));
+    }
+    return response.json();
+  }
+
+  function renderRows(items) {
+    rows.replaceChildren(...items.map((planet) => {
+      const row = document.createElement('tr');
+      row.insertCell().append(action(planet.name, () => openCard('planets', planet.id)));
+      const host = row.insertCell();
+      if (planet.system_id) host.append(action(planet.hostname, () => openCard('systems', planet.system_id)));
+      else host.textContent = value(planet.hostname);
+      for (const key of ['discovery_year', 'discovery_method', 'radius_earth', 'distance_pc']) {
+        row.insertCell().textContent = key === 'discovery_year' ? (planet[key] ?? '—') : value(planet[key]);
+      }
+      return row;
+    }));
+  }
+
+  async function loadPage({ refreshStats = false } = {}) {
+    listRequest?.abort();
+    const controller = new AbortController();
+    listRequest = controller;
+    const { signal } = controller;
+    const query = new URLSearchParams(filters);
+    query.set('page', page);
+    query.set('page_size', pageSize);
+    query.set('sort', sort);
+    query.set('order', order);
+    get('previous').disabled = get('next').disabled = true;
+    status.className = 'muted';
+    status.textContent = 'Загрузка…';
+    if (refreshStats) {
+      get('totals').textContent = '';
+      get('methods').replaceChildren();
+      get('years').replaceChildren();
+    }
+    try {
+      const [result, stats, systems] = await Promise.all([
+        request('planets', query, signal),
+        refreshStats ? request('stats', filters, signal) : null,
+        refreshStats ? request('systems', filters, signal) : null,
+      ]);
+      if (signal.aborted) return;
+      renderRows(result.items);
+      status.textContent = result.total ? 'Найдено планет: ' + count.format(result.total) : 'По этим фильтрам планет нет.';
+      get('page').textContent = result.total ? page + ' / ' + Math.ceil(result.total / pageSize) : '';
+      get('previous').disabled = page <= 1;
+      get('next').disabled = page * pageSize >= result.total;
+      if (stats) {
+        get('totals').textContent = count.format(stats.total) + ' планет · ' + count.format(systems.length) + ' систем с координатами';
+        for (const [id, entries, key] of [['methods', stats.by_method, 'method'], ['years', stats.by_year, 'year']]) {
+          get(id).replaceChildren(...entries.map((entry) => node('li', (entry[key] ?? 'Неизвестно') + ' — ' + count.format(entry.count))));
+        }
+      }
+    } catch (error) {
+      if (signal.aborted) return;
+      rows.replaceChildren();
+      get('page').textContent = '';
+      status.className = 'error';
+      status.textContent = 'Ошибка API. ' + error.message;
+    }
+  }
+
+  function fields(entries) {
+    const list = document.createElement('dl');
+    for (const [label, data] of entries) list.append(node('dt', label), node('dd', value(data)));
+    return list;
+  }
+
+  async function openCard(kind, id) {
+    cardRequest?.abort();
+    const controller = new AbortController();
+    cardRequest = controller;
+    get('card-title').textContent = 'Загрузка…';
+    cardContent.replaceChildren();
+    if (!card.open) card.showModal();
+    try {
+      const data = await request(kind + '/' + encodeURIComponent(id), undefined, controller.signal);
+      if (controller.signal.aborted) return;
+      get('card-title').textContent = kind === 'planets' ? data.name : data.hostname;
+      if (kind === 'planets') {
+        cardContent.append(fields([
+          ['Звезда', data.hostname], ['Расстояние (пк)', data.distance_pc],
+          ['Год открытия', data.discovery_year?.toString()], ['Метод', data.discovery_method],
+          ['Радиус (R⊕)', data.radius_earth], ['Период орбиты (дни)', data.orbital_period_days],
+          ['Большая полуось (а.е.)', data.semi_major_axis_au],
+        ]));
+        if (data.system_id) cardContent.append(action('Открыть систему', () => openCard('systems', data.system_id)));
+      } else {
+        cardContent.append(fields([
+          ['Расстояние (пк)', data.distance_pc], ['Прямое восхождение (°)', data.ra_deg],
+          ['Склонение (°)', data.dec_deg], ['Планет в системе', data.planets.length],
+        ]));
+        const list = document.createElement('ul');
+        for (const planet of data.planets) {
+          const item = document.createElement('li');
+          item.append(action(planet.name, () => openCard('planets', planet.id)));
+          list.append(item);
+        }
+        cardContent.append(list);
+      }
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      get('card-title').textContent = 'Ошибка API';
+      cardContent.textContent = error.message;
+    }
+  }
+
+  function applyFilters() {
+    const data = new FormData(form);
+    sort = data.get('sort');
+    order = data.get('order');
+    data.delete('sort');
+    data.delete('order');
+    filters = new URLSearchParams();
+    for (const [key, raw] of data) {
+      if (raw.trim()) filters.set(key, raw.trim());
+    }
+    page = 1;
+    loadPage({ refreshStats: true });
+  }
+
+  form.addEventListener('submit', (event) => { event.preventDefault(); applyFilters(); });
+  form.addEventListener('reset', () => setTimeout(applyFilters, 0));
+  get('previous').addEventListener('click', () => { page--; loadPage(); });
+  get('next').addEventListener('click', () => { page++; loadPage(); });
+  card.addEventListener('close', () => cardRequest?.abort());
+  request('catalog').then((data) => {
+    get('catalog').textContent = data.imported_at
+      ? count.format(data.planet_count) + ' в каталоге · импорт ' + new Date(data.imported_at).toLocaleString('ru')
+      : 'Каталог ещё не импортирован.';
+  }).catch((error) => { get('catalog').textContent = 'Статус каталога недоступен. ' + error.message; });
+  request('stats').then((data) => {
+    for (const { method } of data.by_method) {
+      if (method) form.elements.method.add(new Option(method, method));
+    }
+  }).catch(() => {});
+  applyFilters();
+</script>
+</body>
+</html>

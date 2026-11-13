@@ -1,0 +1,2 @@
+* text=auto eol=lf
+backend/catalog/frontend/assets/* -diff -whitespace linguist-generated=true

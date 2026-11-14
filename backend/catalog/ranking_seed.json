@@ -2,6 +2,7 @@
   {
     "rank": 1,
     "name": "GJ 1061 d",
+    "discovery_year": 2020,
     "hostname": "GJ 1061",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -58,6 +59,7 @@
   {
     "rank": 2,
     "name": "Proxima Cen b",
+    "discovery_year": 2016,
     "hostname": "Proxima Cen",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -114,6 +116,7 @@
   {
     "rank": 3,
     "name": "Teegarden's Star c",
+    "discovery_year": 2019,
     "hostname": "Teegarden's Star",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -170,6 +173,7 @@
   {
     "rank": 4,
     "name": "GJ 1002 b",
+    "discovery_year": 2022,
     "hostname": "GJ 1002",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -226,6 +230,7 @@
   {
     "rank": 5,
     "name": "Wolf 1069 b",
+    "discovery_year": 2023,
     "hostname": "Wolf 1069",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -282,6 +287,7 @@
   {
     "rank": 6,
     "name": "GJ 1002 c",
+    "discovery_year": 2022,
     "hostname": "GJ 1002",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -338,6 +344,7 @@
   {
     "rank": 7,
     "name": "GJ 3378 b",
+    "discovery_year": 2026,
     "hostname": "GJ 3378",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -394,6 +401,7 @@
   {
     "rank": 8,
     "name": "Gliese 12 b",
+    "discovery_year": 2024,
     "hostname": "Gliese 12",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -450,6 +458,7 @@
   {
     "rank": 9,
     "name": "Kepler-1229 b",
+    "discovery_year": 2016,
     "hostname": "Kepler-1229",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -506,6 +515,7 @@
   {
     "rank": 10,
     "name": "Kepler-62 f",
+    "discovery_year": 2013,
     "hostname": "Kepler-62",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -562,6 +572,7 @@
   {
     "rank": 11,
     "name": "GJ 1061 c",
+    "discovery_year": 2020,
     "hostname": "GJ 1061",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -618,6 +629,7 @@
   {
     "rank": 12,
     "name": "LHS 1140 b",
+    "discovery_year": 2017,
     "hostname": "LHS 1140",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -674,6 +686,7 @@
   {
     "rank": 13,
     "name": "Kepler-138 e",
+    "discovery_year": 2022,
     "hostname": "Kepler-138",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -730,6 +743,7 @@
   {
     "rank": 14,
     "name": "Kepler-442 b",
+    "discovery_year": 2015,
     "hostname": "Kepler-442",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -786,6 +800,7 @@
   {
     "rank": 15,
     "name": "Teegarden's Star b",
+    "discovery_year": 2019,
     "hostname": "Teegarden's Star",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -842,6 +857,7 @@
   {
     "rank": 16,
     "name": "Kepler-1649 c",
+    "discovery_year": 2020,
     "hostname": "Kepler-1649",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -898,6 +914,7 @@
   {
     "rank": 17,
     "name": "TOI-700 e",
+    "discovery_year": 2023,
     "hostname": "TOI-700",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -954,6 +971,7 @@
   {
     "rank": 18,
     "name": "LP 890-9 c",
+    "discovery_year": 2022,
     "hostname": "LP 890-9",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -1010,6 +1028,7 @@
   {
     "rank": 19,
     "name": "Kepler-1652 b",
+    "discovery_year": 2017,
     "hostname": "Kepler-1652",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1066,6 +1085,7 @@
   {
     "rank": 20,
     "name": "Kepler-1512 b",
+    "discovery_year": 2016,
     "hostname": "Kepler-1512",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1122,6 +1142,7 @@
   {
     "rank": 21,
     "name": "TOI-700 d",
+    "discovery_year": 2020,
     "hostname": "TOI-700",
     "zone": "Орбита пересекает границу HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1178,6 +1199,7 @@
   {
     "rank": 22,
     "name": "GJ 667 C c",
+    "discovery_year": 2013,
     "hostname": "GJ 667 C",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1234,6 +1256,7 @@
   {
     "rank": 23,
     "name": "Kepler-1544 b",
+    "discovery_year": 2016,
     "hostname": "Kepler-1544",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1290,6 +1313,7 @@
   {
     "rank": 24,
     "name": "GJ 251 c",
+    "discovery_year": 2025,
     "hostname": "GJ 251",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1346,6 +1370,7 @@
   {
     "rank": 25,
     "name": "TOI-715 b",
+    "discovery_year": 2023,
     "hostname": "TOI-715",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -1402,6 +1427,7 @@
   {
     "rank": 26,
     "name": "Ross 128 b",
+    "discovery_year": 2017,
     "hostname": "Ross 128",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -1458,6 +1484,7 @@
   {
     "rank": 27,
     "name": "Kepler-283 c",
+    "discovery_year": 2014,
     "hostname": "Kepler-283",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1514,6 +1541,7 @@
   {
     "rank": 28,
     "name": "GJ 682 b",
+    "discovery_year": 2014,
     "hostname": "GJ 682",
     "zone": "Вся орбита в консервативной HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1570,6 +1598,7 @@
   {
     "rank": 29,
     "name": "GJ 3323 c",
+    "discovery_year": 2017,
     "hostname": "GJ 3323",
     "zone": "Орбита пересекает границу HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -1626,6 +1655,7 @@
   {
     "rank": 30,
     "name": "Gl 725 B c",
+    "discovery_year": 2026,
     "hostname": "Gl 725 B",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -1682,6 +1712,7 @@
   {
     "rank": 31,
     "name": "K2-72 e",
+    "discovery_year": 2016,
     "hostname": "K2-72",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -1738,6 +1769,7 @@
   {
     "rank": 32,
     "name": "L 98-59 f",
+    "discovery_year": 2025,
     "hostname": "L 98-59",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -1794,6 +1826,7 @@
   {
     "rank": 33,
     "name": "Kepler-296 f",
+    "discovery_year": 2014,
     "hostname": "Kepler-296",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -1850,6 +1883,7 @@
   {
     "rank": 34,
     "name": "TOI-1266 d",
+    "discovery_year": 2025,
     "hostname": "TOI-1266",
     "zone": "Внутри внутренней границы HZ; e неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -1906,6 +1940,7 @@
   {
     "rank": 35,
     "name": "K2-288 B b",
+    "discovery_year": 2018,
     "hostname": "K2-288 B",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -1962,6 +1997,7 @@
   {
     "rank": 36,
     "name": "GJ 273 b",
+    "discovery_year": 2017,
     "hostname": "GJ 273",
     "zone": "Орбита пересекает границу HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -2018,6 +2054,7 @@
   {
     "rank": 37,
     "name": "Kepler-62 e",
+    "discovery_year": 2013,
     "hostname": "Kepler-62",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -2074,6 +2111,7 @@
   {
     "rank": 38,
     "name": "Kepler-22 b",
+    "discovery_year": 2011,
     "hostname": "Kepler-22",
     "zone": "В HZ по круговой аппроксимации; эксцентриситет неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -2130,6 +2168,7 @@
   {
     "rank": 39,
     "name": "K2-3 d",
+    "discovery_year": 2015,
     "hostname": "K2-3",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -2186,6 +2225,7 @@
   {
     "rank": 40,
     "name": "Kepler-296 e",
+    "discovery_year": 2014,
     "hostname": "Kepler-296",
     "zone": "Внутри внутренней границы HZ; e неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
@@ -2242,6 +2282,7 @@
   {
     "rank": 41,
     "name": "Kepler-1410 b",
+    "discovery_year": 2016,
     "hostname": "Kepler-1410",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -2298,6 +2339,7 @@
   {
     "rank": 42,
     "name": "Kepler-1638 b",
+    "discovery_year": 2016,
     "hostname": "Kepler-1638",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -2354,6 +2396,7 @@
   {
     "rank": 43,
     "name": "TOI-2285 b",
+    "discovery_year": 2021,
     "hostname": "TOI-2285",
     "zone": "Орбита пересекает границу HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -2410,6 +2453,7 @@
   {
     "rank": 44,
     "name": "Ross 508 b",
+    "discovery_year": 2022,
     "hostname": "Ross 508",
     "zone": "Орбита пересекает границу HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -2466,6 +2510,7 @@
   {
     "rank": 45,
     "name": "TOI-6002 b",
+    "discovery_year": 2024,
     "hostname": "TOI-6002",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -2522,6 +2567,7 @@
   {
     "rank": 46,
     "name": "TOI-7166 b",
+    "discovery_year": 2025,
     "hostname": "TOI-7166",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -2578,6 +2624,7 @@
   {
     "rank": 47,
     "name": "Wolf 1061 c",
+    "discovery_year": 2015,
     "hostname": "Wolf 1061",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -2634,6 +2681,7 @@
   {
     "rank": 48,
     "name": "Kepler-1606 b",
+    "discovery_year": 2016,
     "hostname": "Kepler-1606",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Вся орбита в оптимистической HZ",
@@ -2690,6 +2738,7 @@
   {
     "rank": 49,
     "name": "Kepler-69 c",
+    "discovery_year": 2013,
     "hostname": "Kepler-69",
     "zone": "Орбита внутри внутренней границы HZ",
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
@@ -2746,6 +2795,7 @@
   {
     "rank": 50,
     "name": "Kepler-440 b",
+    "discovery_year": 2015,
     "hostname": "Kepler-440",
     "zone": "Внутри внутренней границы HZ; e неизвестен",
     "optimistic_zone": "В оптимистической HZ по круговому приближению",

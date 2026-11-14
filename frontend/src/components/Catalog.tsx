@@ -3,13 +3,20 @@ import { api } from '../api/client'
 import type { CatalogPage, CatalogPlanet } from '../api/types'
 import { physicalFields, PlanetFilters } from './PlanetFilters'
 import type { PhysicalFilters } from './PlanetFilters'
+import { nextSort, SortHeader, type TableSort } from './SortHeader'
 
 const pageSize = 25
 const number = new Intl.NumberFormat('ru', { maximumFractionDigits: 5 })
+const columns = [
+  ['name', 'Планета'], ['hostname', 'Звезда'], ['year', 'Год'],
+  ['method', 'Метод открытия'], ['radius', 'Радиус (R⊕)'], ['distance', 'Расстояние (пк)'],
+] as const
+type SortKey = typeof columns[number][0]
 
 export function Catalog() {
   const [search, setSearch] = useState({ query: '', filters: {} as PhysicalFilters })
   const [page, setPage] = useState(1)
+  const [sort, setSort] = useState<TableSort<SortKey>>({ key: 'name', order: 'asc' })
   const [data, setData] = useState<CatalogPage | null>(null)
   const [error, setError] = useState('')
   const [selected, setSelected] = useState<string | null>(null)
@@ -20,7 +27,9 @@ export function Catalog() {
     const controller = new AbortController()
     setData(null)
     setError('')
-    const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) })
+    const params = new URLSearchParams({
+      page: String(page), page_size: String(pageSize), sort: sort.key, order: sort.order,
+    })
     if (search.query) params.set('q', search.query)
     for (const [key, value] of Object.entries(search.filters)) params.set(key, String(value))
     api.catalog(params, controller.signal).then(
@@ -28,7 +37,7 @@ export function Catalog() {
       (cause: Error) => { if (!controller.signal.aborted) setError(cause.message) },
     )
     return () => controller.abort()
-  }, [search, page])
+  }, [search, page, sort])
 
   useEffect(() => {
     if (!selected) return
@@ -55,7 +64,13 @@ export function Catalog() {
           <p role="status">{data.total ? `Найдено планет: ${number.format(data.total)}` : 'Планеты не найдены.'}</p>
           {!!data.items.length && <div className="table-scroll">
             <table>
-              <thead><tr><th>Планета</th><th>Звезда</th><th>Год</th><th>Метод открытия</th><th>Радиус (R⊕)</th><th>Расстояние (пк)</th></tr></thead>
+              <thead><tr>{columns.map(([key, label]) => (
+                <SortHeader key={key} label={label} order={sort.key === key ? sort.order : undefined} onSort={() => {
+                  setSort((previous) => nextSort(previous, key))
+                  setPage(1)
+                  setSelected(null)
+                }} />
+              ))}</tr></thead>
               <tbody>{data.items.map((planet) => (
                 <tr key={planet.id}>
                   <td><button className="table-link" onClick={() => setSelected(planet.id)}>{planet.name}</button></td>

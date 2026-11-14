@@ -21,7 +21,9 @@ FROM_PLANETS = sql.SQL(" FROM planets p LEFT JOIN systems s ON s.id = p.system_i
 SELECT_PLANETS = sql.SQL("SELECT p.*, s.hostname, s.distance_pc") + FROM_PLANETS
 SORT_COLUMNS = {
     "name": sql.SQL("p.name"),
+    "hostname": sql.SQL("s.hostname"),
     "year": sql.SQL("p.discovery_year"),
+    "method": sql.SQL("p.discovery_method"),
     "radius": sql.SQL("p.radius_earth"),
     "distance": sql.SQL("s.distance_pc"),
 }
@@ -187,4 +189,14 @@ def ranking(db: Database, limit: Annotated[int, Query(ge=1, le=50)] = 50):
     metadata = {"nasa_downloaded_at": catalog["nasa_downloaded_at"] if catalog else None}
     if row is None:
         return {**metadata, "source": "team_csv", "calculated_at": None, "items": seed_ranking()[:limit]}
-    return {**metadata, "source": "team_script", "calculated_at": row["calculated_at"], "items": row["items"][:limit]}
+    items = row["items"][:limit]
+    missing_years = [item["name"] for item in items if "discovery_year" not in item]
+    if missing_years:
+        years = {
+            planet["name"]: planet["discovery_year"]
+            for planet in db.execute(
+                "SELECT name, discovery_year FROM planets WHERE name = ANY(%s)", (missing_years,),
+            ).fetchall()
+        }
+        items = [{**item, "discovery_year": item.get("discovery_year", years.get(item["name"]))} for item in items]
+    return {**metadata, "source": "team_script", "calculated_at": row["calculated_at"], "items": items}

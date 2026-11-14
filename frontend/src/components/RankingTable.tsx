@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { RankedPlanet, Ranking } from '../api/types'
 import { physicalFields, PlanetFilters } from './PlanetFilters'
 import type { PhysicalFilters } from './PlanetFilters'
+import { nextSort, SortHeader, type TableSort } from './SortHeader'
 
 const number = new Intl.NumberFormat('ru', { maximumFractionDigits: 3 })
 const score = new Intl.NumberFormat('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -9,6 +10,22 @@ const value = (numberValue: number | null, unit: string) =>
   numberValue == null ? '—' : number.format(numberValue) + ' ' + unit
 const time = (date: string) => new Date(date).toLocaleString('ru', { timeZone: 'Europe/Moscow' }) + ' МСК'
 const factors = [['hz_score', 'Обитаемая зона'], ['radius_score', 'Радиус'], ['density_score', 'Плотность']] as const
+const columns = [
+  ['rank', 'Место'], ['name', 'Планета'], ['discovery_year', 'Год'],
+  ['score', 'Индекс'], ['zone', 'Обитаемая зона'], ['data_coverage_pct', 'Полнота данных'],
+] as const
+type SortKey = typeof columns[number][0]
+const alphabetical = new Intl.Collator('ru', { numeric: true, sensitivity: 'base' })
+
+function comparePlanets(a: RankedPlanet, b: RankedPlanet, { key, order }: TableSort<SortKey>) {
+  const first = a[key]
+  const second = b[key]
+  if (first == null) return second == null ? a.rank - b.rank : 1
+  if (second == null) return -1
+  const difference = typeof first === 'number' && typeof second === 'number'
+    ? first - second : alphabetical.compare(String(first), String(second))
+  return (order === 'asc' ? difference : -difference) || a.rank - b.rank
+}
 
 function range(inner: number | null, outer: number | null, unit: string) {
   return inner == null || outer == null ? '—' : `${number.format(inner)}–${value(outer, unit)}`
@@ -78,6 +95,7 @@ export function RankDetails({ planet }: { planet: RankedPlanet }) {
 export function RankingTable({ ranking, error }: { ranking: Ranking | null; error: string | null }) {
   const [filters, setFilters] = useState<PhysicalFilters>({})
   const [query, setQuery] = useState('')
+  const [sort, setSort] = useState<TableSort<SortKey>>({ key: 'rank', order: 'asc' })
   const items = ranking?.items.filter((planet) => (
     (!query || [planet.name, planet.hostname].some((name) => name?.toLowerCase().includes(query))) &&
     physicalFields.every(({ key, property }) => {
@@ -87,7 +105,7 @@ export function RankingTable({ ranking, error }: { ranking: Ranking | null; erro
       return (min === undefined || (value != null && value >= min)) &&
         (max === undefined || (value != null && value <= max))
     })
-  )) ?? []
+  )).sort((a, b) => comparePlanets(a, b, sort)) ?? []
   return (
     <section aria-labelledby="ranking-title">
       <h2 id="ranking-title">Топ-50 по индексу жизнепригодности</h2>
@@ -102,11 +120,15 @@ export function RankingTable({ ranking, error }: { ranking: Ranking | null; erro
           <p role="status">{items.length ? `Найдено планет: ${items.length} из ${ranking.items.length}` : 'Планеты не найдены.'}</p>
           {!!items.length && <div className="table-scroll">
             <table>
-              <thead><tr><th>Место</th><th>Планета</th><th>Индекс</th><th>Обитаемая зона</th><th>Полнота данных</th></tr></thead>
+              <thead><tr>{columns.map(([key, label]) => (
+                <SortHeader key={key} label={label} order={sort.key === key ? sort.order : undefined}
+                  onSort={() => setSort((previous) => nextSort(previous, key))} />
+              ))}</tr></thead>
               <tbody>{items.map((planet) => (
                 <tr key={planet.name}>
                   <td><span className={planet.rank === 1 ? 'rank-number rank-first' : planet.rank <= 5 ? 'rank-number rank-leader' : 'rank-number'}>{planet.rank}</span></td>
                   <td><details><summary>{planet.name}</summary><RankDetails planet={planet} /></details></td>
+                  <td>{planet.discovery_year ?? '—'}</td>
                   <td>{score.format(planet.score)}</td><td>{planet.zone}</td><td>{planet.quality}</td>
                 </tr>
               ))}</tbody>

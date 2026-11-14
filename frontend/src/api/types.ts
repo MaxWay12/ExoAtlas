@@ -25,6 +25,7 @@ export interface ChartPoint {
 
 export interface RankedPlanet {
   rank: number
+  discovery_year?: number | null
   name: string
   hostname: string | null
   score: number

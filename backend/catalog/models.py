@@ -50,7 +50,7 @@ class Filters(BaseModel):
 class PlanetQuery(Filters):
     page: int = Field(default=1, ge=1, le=1_000_000)
     page_size: int = Field(default=50, ge=1, le=100)
-    sort: Literal["name", "year", "radius", "distance"] = "name"
+    sort: Literal["name", "hostname", "year", "method", "radius", "distance"] = "name"
     order: Literal["asc", "desc"] = "asc"
 
 

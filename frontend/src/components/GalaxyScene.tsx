@@ -235,7 +235,7 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
         </mesh>
 
         {/* Системы из каталога */}
-        <points
+        {points.length > 0 && <points
           raycast={pickSystem}
           onClick={(e: ThreeEvent<MouseEvent>) => { if (e.index !== undefined && points[e.index]) onSelect(points[e.index].id) }}
           onPointerMove={(e: ThreeEvent<PointerEvent>) => {
@@ -247,11 +247,11 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
           onPointerOut={() => { hovering.current = false; setHoverIndex(null); onHover(null, 0, 0) }}
         >
           <bufferGeometry>
-            <bufferAttribute attach="attributes-position" count={points.length} array={positions} itemSize={3} />
-            <bufferAttribute attach="attributes-color" count={points.length} array={colors} itemSize={3} />
+            <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+            <bufferAttribute attach="attributes-color" args={[colors, 3]} />
           </bufferGeometry>
           <pointsMaterial size={3.8 * scale} map={sprite} vertexColors toneMapped={false} transparent depthWrite={false} blending={AdditiveBlending} alphaTest={0.01} />
-        </points>
+        </points>}
 
         {highlight !== null && (
           <points key={highlight} raycast={() => null}>

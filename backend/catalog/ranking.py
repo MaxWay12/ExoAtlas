@@ -48,6 +48,7 @@ def calculate_ranking(source_rows):
     top = team.select_top50(team.process_planets(data))
     items = []
     for row in top.to_dict("records"):
+        discovery_year = number_or_none(row.get("disc_year"))
         reference = str(references.get(row["pl_name"]) or "").casefold()
         radius_source = (
             "Оценка NASA (расчёт)" if "calculated_value" in reference or "calculated value" in reference
@@ -63,6 +64,7 @@ def calculate_ranking(source_rows):
         items.append({
             "rank": int(row["rank"]),
             "name": row["pl_name"],
+            "discovery_year": int(discovery_year) if discovery_year is not None else None,
             "hostname": row.get("hostname") or None,
             "zone": row["hz_status"],
             "optimistic_zone": row["optimistic_hz_status"],

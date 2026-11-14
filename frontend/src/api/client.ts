@@ -1,5 +1,6 @@
-import type { CatalogPage, CatalogPlanet, Planet, ProjectInfo, Ranking } from './types'
+import type { CatalogPage, CatalogPlanet, Planet, ProjectInfo, Ranking, SystemDetail, SystemPoint } from './types'
 import { mockPlanets } from './mock'
+import { mockSystemDetail, mockSystemPoints } from './mockGalaxy'
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 const COLORS = ['#6ec1ff', '#c08bff', '#ff8c69', '#5fd4a0', '#ff7eb6']
@@ -39,5 +40,12 @@ export const api = {
   project: async () => project,
   ranking: () => get<Ranking>('/ranking'),
   catalog: (query: URLSearchParams, signal: AbortSignal) => get<CatalogPage>(`/planets?${query}`, signal),
+  systems: async (signal?: AbortSignal) => USE_MOCK ? mockSystemPoints : get<SystemPoint[]>('/systems', signal),
+  system: async (id: string, signal?: AbortSignal): Promise<SystemDetail> => {
+    if (!USE_MOCK) return get<SystemDetail>(`/systems/${encodeURIComponent(id)}`, signal)
+    const detail = mockSystemDetail(id)
+    if (!detail) throw new Error('HTTP 404')
+    return detail
+  },
   planet: (id: string, signal: AbortSignal) => get<CatalogPlanet>(`/planets/${encodeURIComponent(id)}`, signal),
 }

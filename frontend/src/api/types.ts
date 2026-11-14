@@ -72,3 +72,25 @@ export interface CatalogPage {
   page: number
   page_size: number
 }
+
+// ===== Карта систем: зеркало моделей бэкенда (backend/catalog/models.py) =====
+// GET /api/systems → SystemPoint[]; GET /api/systems/{id} → SystemDetail
+export interface SystemPoint {
+  id: string // uuid системы — единственный ключ связи
+  hostname?: string | null // сейчас бэкенд не отдаёт; если добавят, появится в подсказке
+  ra_deg: number
+  dec_deg: number
+  distance_pc: number
+  planet_count: number
+}
+
+export type SystemPlanet = CatalogPlanet & { system_id: string | null }
+
+export interface SystemDetail {
+  id: string
+  hostname: string
+  ra_deg: number | null
+  dec_deg: number | null
+  distance_pc: number | null
+  planets: SystemPlanet[]
+}

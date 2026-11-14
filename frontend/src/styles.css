@@ -128,3 +128,25 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
   .scene { top: 115px; height: 315px; }
   .planet-picker button { font-size: 12px; padding: 5px 8px; }
 }
+
+/* Карта систем */
+.galaxy-page { padding: 0; }
+.galaxy { position: relative; height: max(660px, 100vh); }
+.galaxy-canvas { position: absolute; inset: 0; animation: galaxy-fade .6s ease-out; }
+@keyframes galaxy-fade { from { opacity: 0; } to { opacity: 1; } }
+.galaxy-tip { position: absolute; left: 0; top: 0; z-index: 2; padding: 6px 10px; border: 1px solid #6b7099; border-radius: 8px; background: rgba(10, 12, 30, .92); font-size: 13px; white-space: nowrap; pointer-events: none; }
+.galaxy-tip[hidden] { display: none; }
+.galaxy-hint { position: absolute; left: 24px; right: 24px; bottom: 16px; margin: 0; text-align: center; font-size: 13px; color: #b6bfd6; pointer-events: none; }
+.galaxy-zoom { position: absolute; z-index: 2; right: 16px; bottom: 52px; display: flex; gap: 6px; }
+.galaxy-back { position: absolute; z-index: 2; left: 24px; top: 116px; }
+.galaxy-back, .galaxy-zoom button { padding: 8px 12px; border: 1px solid #6b7099; border-radius: 8px; background: #141932; color: var(--text); font: inherit; cursor: pointer; }
+.galaxy-back:focus-visible, .galaxy-zoom button:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+.galaxy-zoom button:disabled { opacity: .45; cursor: default; }
+.galaxy-warning { position: absolute; z-index: 2; left: 24px; right: 24px; top: 140px; margin: 0; padding: 8px 12px; border-radius: 8px; background: #5b1a28; font-size: 13px; }
+.galaxy .popup { left: auto; right: 24px; top: 96px; transform: none; }
+.galaxy .planet-picker { bottom: 24px; }
+@media (max-width: 1119px) {
+  .galaxy .planet-picker { position: absolute; margin: 0; inset: auto 16px 16px; }
+  .galaxy .popup { top: 168px; right: 16px; left: 16px; width: auto; max-height: 45%; }
+}
+@media (prefers-reduced-motion: reduce) { .galaxy-canvas { animation: none; } }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { api, scenePlanets } from './api/client'
 import { useApi } from './api/useApi'
 import { Sidebar } from './components/Sidebar'
@@ -7,9 +7,11 @@ import { Catalog } from './components/Catalog'
 import { RankingTable, RankDetails } from './components/RankingTable'
 import { DashboardCharts } from './components/DashboardCharts'
 
+const GalaxyMap = lazy(() => import('./components/GalaxyMap').then(({ GalaxyMap }) => ({ default: GalaxyMap })))
+
 function currentPage() {
   const hash = location.hash.slice(1)
-  return hash === 'top' || hash === 'catalog' ? hash : 'home'
+  return hash === 'top' || hash === 'catalog' || hash === 'galaxy' ? hash : 'home'
 }
 
 export default function App() {
@@ -47,8 +49,12 @@ export default function App() {
   return (
     <div className="layout">
       <Sidebar project={project.data} active={page} />
-      <main className={page === 'home' ? 'stage home' : 'stage data-page'}>
-        {page === 'catalog' ? <Catalog /> : page === 'top' ? (
+      <main className={page === 'home' ? 'stage home' : page === 'galaxy' ? 'stage galaxy-page' : 'stage data-page'}>
+        {page === 'catalog' ? <Catalog /> : page === 'galaxy' ? (
+          <Suspense fallback={<p className="scene-status" role="status">Загрузка карты…</p>}>
+            <GalaxyMap ranking={ranking.data} />
+          </Suspense>
+        ) : page === 'top' ? (
           <RankingTable ranking={ranking.data} error={ranking.error} />
         ) : (
           <section className="scene-panel" aria-labelledby="scene-title">

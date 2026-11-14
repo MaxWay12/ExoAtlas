@@ -1,7 +1,10 @@
+import { SkyStars } from './SpaceSky'
 import { useEffect, useRef, type MutableRefObject } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { DoubleSide, MathUtils, type Group } from 'three'
+import { AdditiveBlending, Color, DoubleSide, MathUtils, type Group } from 'three'
 import type { PlanetLook } from '../galaxy/look'
+import { PlanetLabel } from './PlanetLabel'
+import { PlanetSurface } from './PlanetSurface'
 
 const TILT = -0.95
 
@@ -22,8 +25,9 @@ function PlanetBody({ look, phase, selected, onSelect }: { look: PlanetLook; pha
         onPointerOut={() => (document.body.style.cursor = '')}
       >
         <sphereGeometry args={[look.size, 32, 32]} />
-        <meshStandardMaterial color={look.color} />
+        <PlanetSurface id={look.planet.id} color={look.color} banded={(look.planet.radius_earth ?? 0) >= 4} />
       </mesh>
+      <PlanetLabel body={ref} name={look.planet.name} radius={look.size} />
     </group>
   )
 }
@@ -45,6 +49,34 @@ function Rig({ looks, star, selectedId, onSelect }: Props) {
         <sphereGeometry args={[0.55, 32, 32]} />
         <meshBasicMaterial color={star} />
       </mesh>
+      <sprite scale={[2.7, 2.7, 1]} raycast={() => null}>
+        <shaderMaterial
+          transparent
+          depthWrite={false}
+          blending={AdditiveBlending}
+          uniforms={{ glowColor: { value: new Color(star) } }}
+          vertexShader={`
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              vec4 center = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+              vec2 scale = vec2(length(modelMatrix[0].xyz), length(modelMatrix[1].xyz));
+              center.xy += position.xy * scale;
+              gl_Position = projectionMatrix * center;
+            }
+          `}
+          fragmentShader={`
+            uniform vec3 glowColor;
+            varying vec2 vUv;
+            void main() {
+              float radius = length(vUv - 0.5) * 2.0;
+              float glow = 1.0 - smoothstep(0.2, 1.0, radius);
+              gl_FragColor = vec4(glowColor, 0.28 * glow * glow);
+              #include <colorspace_fragment>
+            }
+          `}
+        />
+      </sprite>
       {looks.map((look) => (
         <mesh key={'orbit-' + look.planet.id}>
           <ringGeometry args={[look.orbit - 0.012, look.orbit + 0.012, 128]} />
@@ -62,6 +94,7 @@ export function SystemScene(props: Props) {
   const extent = props.looks.reduce((max, { orbit, size }) => Math.max(max, orbit + size * 1.5), 0.55)
   return (
     <Canvas camera={{ position: [0, 0, 13], fov: 50 }} dpr={[1, 1.5]}>
+      <SkyStars subtle />
       <ambientLight intensity={0.6} />
       <FitSystem extent={extent} />
       <Rig {...props} />

@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { SkyStars } from './SpaceSky'
+import { useEffect, useRef, type MutableRefObject } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { DoubleSide, MathUtils, PerspectiveCamera, type Group } from 'three'
 import type { Planet } from '../api/types'
+import { PlanetLabel } from './PlanetLabel'
+import { PlanetSurface } from './PlanetSurface'
 
 const A = 5.5 // радиус орбиты (орбита круглая, наклон даёт вид сбоку)
 const B = 5.5
@@ -32,8 +35,9 @@ function PlanetMesh({ planet, phase, selected, onSelect }: { planet: Planet; pha
         onPointerOut={() => (document.body.style.cursor = '')}
       >
         <sphereGeometry args={[planet.size, 32, 32]} />
-        <meshStandardMaterial color={planet.color} />
+        <PlanetSurface id={planet.id} color={planet.color} banded={planet.size >= 0.5} />
       </mesh>
+      <PlanetLabel body={ref} name={planet.name} radius={planet.size} />
     </group>
   )
 }
@@ -87,33 +91,13 @@ function Orbit({ planets, selectedId, onSelect, onArrive }: OrbitProps) {
   )
 }
 
-function Stars({ count = 600 }: { count?: number }) {
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 40
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 24
-      arr[i * 3 + 2] = -5 - Math.random() * 10
-    }
-    return arr
-  }, [count])
-  return (
-    <points>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
-      </bufferGeometry>
-      <pointsMaterial size={0.06} color="#ffffff" />
-    </points>
-  )
-}
-
 export function Scene(props: OrbitProps) {
   return (
     <Canvas camera={{ position: [0, 0, 12], fov: 50 }} dpr={[1, 2]}>
       <ambientLight intensity={0.7} />
       <FitOrbit />
       <directionalLight position={[5, 6, 8]} intensity={2} />
-      <Stars />
+      <SkyStars />
       <Orbit {...props} />
     </Canvas>
   )

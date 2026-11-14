@@ -6,6 +6,7 @@ import { Scene } from './components/Scene'
 import { Catalog } from './components/Catalog'
 import { RankingTable, RankDetails } from './components/RankingTable'
 import { DashboardCharts } from './components/DashboardCharts'
+import { SpaceSky } from './components/SpaceSky'
 
 const GalaxyMap = lazy(() => import('./components/GalaxyMap').then(({ GalaxyMap }) => ({ default: GalaxyMap })))
 
@@ -66,6 +67,7 @@ export default function App() {
             {planets.length > 0 && (
               <>
                 <div className="scene">
+                  <SpaceSky />
                   <Scene planets={planets} selectedId={selected} onSelect={select} onArrive={() => setOpen(true)} />
                 </div>
                 <div className="planet-picker" aria-label="Выбрать планету">

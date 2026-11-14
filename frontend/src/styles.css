@@ -14,11 +14,11 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 
 /* Боковая панель */
 .sidebar { width: 220px; padding: 20px 16px; background: var(--panel); border-right: 3px solid var(--indigo); display: flex; flex-direction: column; gap: 20px; color: var(--ink); }
-.project-name { margin: 0; padding: 12px; border: 2px solid var(--indigo); border-radius: 10px; font-size: 16px; text-align: center; }
+.project-name { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; padding: 14px; font-size: 22px; }
 .sidebar nav { display: flex; flex-direction: column; gap: 8px; }
-.sidebar nav a { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; border-radius: 12px; color: var(--indigo); text-decoration: none; font-size: 13px; }
+.sidebar nav a { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px; border-radius: 12px; color: var(--indigo); text-decoration: none; font-size: 16px; }
 .sidebar nav a:hover, .sidebar nav a:focus-visible { background: #e3e5ff; outline: none; }
-.team { margin-top: auto; padding: 12px; border: 2px solid var(--indigo); border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.team { margin-top: auto; padding: 12px; border: 2px solid var(--indigo); border-radius: 12px; font-size: 13px; line-height: 1.5; text-align: center; }
 .team-event { margin: 0 0 6px; color: var(--indigo); }
 .team h2 { margin: 0 0 6px; font-size: 15px; }
 .team ul { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
@@ -27,6 +27,59 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .stage { position: relative; flex: 1; min-height: 100vh; overflow: hidden; }
 .scene-panel { position: relative; padding-top: clamp(460px, 62vh, 650px); }
 .scene { position: absolute; inset: 0; }
+.space-sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 43% 58% at center,
+    rgba(47, 96, 203, .32) 0%,
+    rgba(32, 66, 156, .21) 36%,
+    rgba(20, 43, 108, .09) 67%,
+    transparent 100%);
+}
+.shooting-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shooting-stars span {
+  position: absolute;
+  top: 14%;
+  left: 24%;
+  width: clamp(40px, 9vw, 105px);
+  height: 2px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, #6aa5ff 72%, #ecf7ff);
+  box-shadow: 0 0 8px -1px #7eb1ff;
+  opacity: 0;
+  animation: shooting-star 17s 3s linear infinite;
+}
+.shooting-stars span + span {
+  top: 28%;
+  left: 54%;
+  animation-delay: 11s;
+  animation-duration: 29s;
+}
+@keyframes shooting-star {
+  0% { opacity: 0; transform: rotate(28deg) translateX(-55px); }
+  1% { opacity: .9; }
+  4%, 100% { opacity: 0; transform: rotate(28deg) translateX(clamp(100px, 26vw, 340px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shooting-stars { display: none; }
+}
+.planet-scene-label {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 5px));
+  pointer-events: none;
+  white-space: nowrap;
+  color: var(--text);
+  text-shadow: 0 1px 3px #05060f;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
 .dashboard-charts { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 24px 24px; }
 .chart { min-width: 0; padding: 12px; border: 1px solid #3e476e; border-radius: 12px; background: rgba(10, 12, 30, .85); }
 .chart h2 { margin: 0 0 8px; font-size: 15px; }
@@ -49,7 +102,16 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .popup button:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
 .error { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); padding: 8px 16px; border-radius: 8px; background: #5b1a28; }
 
-.sidebar nav a[aria-current="page"] { background: #e3e5ff; }
+.sidebar nav a[aria-current="page"] { position: relative; background: #e3e5ff; }
+.sidebar nav a[aria-current="page"]::before {
+  content: '';
+  position: absolute;
+  inset-block: 25%;
+  inset-inline-start: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--indigo);
+}
 .sidebar { flex-shrink: 0; }
 .stage { min-width: 0; }
 .scene-heading, .scene-status { position: absolute; z-index: 1; left: 24px; right: 24px; pointer-events: none; }
@@ -58,8 +120,8 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .scene-heading p, .muted { color: #b6bfd6; }
 .ranking-link { display: inline-block; pointer-events: auto; padding: 7px 12px; border-radius: 8px; background: #a3a0ff; color: #11122e; font-weight: 700; text-decoration: none; }
 .ranking-link:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
-.scene-panel .scene-status { top: 155px; }
 .scene-status { top: 125px; }
+.scene-panel .scene-status { top: 155px; }
 .planet-picker { position: absolute; z-index: 1; bottom: 24px; left: 24px; right: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .planet-picker button, .catalog-search button, .pagination button { padding: 8px 12px; border: 1px solid #6b7099; border-radius: 8px; background: #141932; color: var(--text); font: inherit; cursor: pointer; }
 .planet-picker button[aria-pressed="true"] { border-color: var(--sun); }
@@ -125,7 +187,7 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
   .sidebar { width: auto; flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 3px solid var(--indigo); }
   .sidebar nav { flex-direction: row; flex-wrap: wrap; }
   .team { flex: 1 0 100%; }
-  .team ul { display: flex; flex-wrap: wrap; gap: 3px 16px; }
+  .team ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px 16px; }
   .stage.data-page { min-height: 70vh; }
 }
 
@@ -139,7 +201,15 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 /* Карта систем */
 .galaxy-page { padding: 0; }
 .galaxy { position: relative; height: max(660px, 100vh); }
+.galaxy > .space-sky {
+  background: radial-gradient(ellipse 43% 58% at center,
+    rgba(32, 67, 154, .15) 0%,
+    rgba(18, 39, 97, .08) 45%,
+    transparent 100%), #03040b;
+}
 .galaxy-canvas { position: absolute; inset: 0; animation: galaxy-fade .6s ease-out; }
+.galaxy-map-view canvas { cursor: grab; touch-action: none; }
+.galaxy-map-view canvas.is-panning { cursor: grabbing; }
 @keyframes galaxy-fade { from { opacity: 0; } to { opacity: 1; } }
 .galaxy-tip { position: absolute; left: 0; top: 0; z-index: 2; padding: 6px 10px; border: 1px solid #6b7099; border-radius: 8px; background: rgba(10, 12, 30, .92); font-size: 13px; white-space: nowrap; pointer-events: none; }
 .galaxy-tip[hidden] { display: none; }
@@ -152,8 +222,20 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .galaxy-warning { position: absolute; z-index: 2; left: 24px; right: 24px; top: 140px; margin: 0; padding: 8px 12px; border-radius: 8px; background: #5b1a28; font-size: 13px; }
 .galaxy .popup { left: auto; right: 24px; top: 96px; transform: none; }
 .galaxy .planet-picker { bottom: 24px; }
+.home .planet-picker button { min-height: 44px; padding: 8px 14px; font-size: 16px; }
+.home .dashboard-charts .chart { padding: 18px; }
+.home .dashboard-charts .chart h2 { font-size: 18px; }
+.home .dashboard-charts .chart svg { max-height: 230px; }
+.home .dashboard-charts .chart svg text { font-size: 11px; }
+@media (max-width: 1119px) {
+  .home .dashboard-charts .chart { min-height: 130px; }
+  .home .dashboard-charts .chart > p { font-size: 16px; }
+}
 @media (max-width: 1119px) {
   .galaxy .planet-picker { position: absolute; margin: 0; inset: auto 16px 16px; }
   .galaxy .popup { top: 168px; right: 16px; left: 16px; width: auto; max-height: 45%; }
+}
+@media (max-width: 650px) {
+  .home .planet-picker button { padding: 5px 10px; font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .galaxy-canvas { animation: none; } }

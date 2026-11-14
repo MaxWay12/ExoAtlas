@@ -11,11 +11,14 @@ const items: { id: IconName; label: string }[] = [
 export function Sidebar({ project, active }: { project: ProjectInfo | null; active: string }) {
   return (
     <aside className="sidebar">
-      <h1 className="project-name">{project?.name ?? 'ExoAtlas'}</h1>
+      <h1 className="project-name">
+        <img src="/assets/exoatlas.svg" alt="" width={40} height={40} />
+        {project?.name ?? 'ExoAtlas'}
+      </h1>
       <nav aria-label="Разделы">
         {items.map((item) => (
           <a key={item.id} href={`#${item.id}`} aria-current={active === item.id ? 'page' : undefined}>
-            <NavIcon name={item.id} />
+            <NavIcon name={item.id} size={30} />
             {item.label}
           </a>
         ))}

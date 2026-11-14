@@ -1,9 +1,21 @@
 import type { CatalogPage, CatalogPlanet, Planet, ProjectInfo, Ranking } from './types'
-import { mockPlanets, mockProject } from './mock'
+import { mockPlanets } from './mock'
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 const COLORS = ['#6ec1ff', '#c08bff', '#ff8c69', '#5fd4a0', '#ff7eb6']
-const project: ProjectInfo = { name: 'ExoAtlas', team: { name: '', members: [] } }
+const project: ProjectInfo = {
+  name: 'ExoAtlas',
+  team: {
+    name: 'JPEG',
+    members: [
+      'Настя Васильченко',
+      'Максим Тимонин',
+      'Анастасия Капленко',
+      'Екатерина Максименко',
+      'Кирилл Игнатенко',
+    ],
+  },
+}
 
 async function get<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch('/api' + path, { signal })
@@ -24,7 +36,7 @@ export function scenePlanets(ranking: Ranking | null): Planet[] {
 }
 
 export const api = {
-  project: async () => USE_MOCK ? mockProject : project,
+  project: async () => project,
   ranking: () => get<Ranking>('/ranking'),
   catalog: (query: URLSearchParams, signal: AbortSignal) => get<CatalogPage>(`/planets?${query}`, signal),
   planet: (id: string, signal: AbortSignal) => get<CatalogPlanet>(`/planets/${encodeURIComponent(id)}`, signal),

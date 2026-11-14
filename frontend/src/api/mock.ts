@@ -1,9 +1,4 @@
-import type { ChartData, Planet, ProjectInfo } from './types'
-
-export const mockProject: ProjectInfo = {
-  name: 'Название проекта',
-  team: { name: 'Название команды', members: ['Фамилия И. О.', 'Фамилия И. О.', 'Фамилия И. О.'] },
-}
+import type { ChartData, Planet } from './types'
 
 export const mockPlanets: Planet[] = [
   { id: 'p1', name: 'Планета 1', color: '#6ec1ff', size: 0.3, angle: 90, description: 'Здесь будет описание планеты 1. Текст приходит с бэкенда.' },

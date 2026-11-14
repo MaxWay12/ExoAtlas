@@ -7,8 +7,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from .db import create_schema, database_url
-from .physical import density_from_mass, estimate_mass, estimate_temperature
-from .ranking import calculate_ranking, RANKING_COLUMNS
+from .ranking import calculate_ranking, RANKING_COLUMNS, RANKING_MODEL
 
 TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 COLUMNS = (
@@ -30,22 +29,6 @@ def number(value):
     return result
 
 
-def physical_values(row):
-    radius = number(row.get("pl_rade"))
-    orbit = number(row.get("pl_orbsmax"))
-    star_temperature = number(row.get("st_teff"))
-    temperature = number(row.get("pl_eqt"))
-    if temperature is None:
-        temperature = estimate_temperature(star_temperature, number(row.get("st_rad")), orbit)
-    density = number(row.get("pl_dens"))
-    if density is None and radius is not None and radius > 0:
-        mass = number(row.get("pl_bmasse"))
-        if mass is None and 0.5 <= radius <= 3:
-            mass = estimate_mass(radius)
-        density = density_from_mass(mass, radius)
-    return temperature, density, star_temperature
-
-
 def parse_catalog(content, *, with_ranking=False):
     document = ElementTree.fromstring(content)
     statuses = [
@@ -61,8 +44,6 @@ def parse_catalog(content, *, with_ranking=False):
         raise ValueError("Missing VOTable TABLEDATA")
     fields = [field.get("name", "").lower() for field in table.findall("./{*}FIELD")]
     expected = (*COLUMNS, *RANKING_COLUMNS) if with_ranking else COLUMNS
-    if with_ranking and "pl_dens" in fields:
-        expected = (*expected, "pl_dens")
     if len(fields) != len(expected) or set(fields) != set(expected):
         raise ValueError("Unexpected TAP columns")
 
@@ -73,8 +54,7 @@ def parse_catalog(content, *, with_ranking=False):
         values = [(cell.text or "").strip() for cell in entry.findall("./{*}TD")]
         row = dict(zip(fields, values, strict=True))
         if with_ranking:
-            # The published density is used for browsing, while the ranking keeps its original inputs.
-            source_rows.append({key: value for key, value in row.items() if key != "pl_dens"})
+            source_rows.append(row)
         name = row["pl_name"]
         host = row["hostname"] or None
         if not name or name in planets:
@@ -95,27 +75,23 @@ def parse_catalog(content, *, with_ranking=False):
             int(row["disc_year"]) if row["disc_year"] else None,
             row["discoverymethod"] or None,
             *(number(row[key]) for key in COLUMNS[7:]),
-            *physical_values(row),
+            *(number(row.get(key)) for key in ("pl_eqt", "pl_dens", "st_teff")),
         )
 
     if not planets:
         raise ValueError("TAP returned an empty catalog")
     snapshot = (list(systems.values()), list(planets.values()))
     if with_ranking:
-        ranking = calculate_ranking(source_rows)
-        for item in ranking:
-            temperature, density, star_temperature = planets[item["name"]][-3:]
-            item.update(temperature_k=temperature, density_g_cm3=density, star_temperature_k=star_temperature)
-        return (*snapshot, ranking)
+        return (*snapshot, calculate_ranking(source_rows))
     return snapshot
 
 
 def fetch_catalog():
     response = httpx.get(
         TAP_URL,
-        params={"query": f"SELECT {', '.join((*COLUMNS, *RANKING_COLUMNS, 'pl_dens'))} FROM pscomppars ORDER BY pl_name",
+        params={"query": f"SELECT {', '.join((*COLUMNS, *RANKING_COLUMNS))} FROM pscomppars ORDER BY pl_name",
                 "format": "votable"},
-        timeout=60,
+        timeout=180,
         follow_redirects=True,
     )
     response.raise_for_status()
@@ -161,12 +137,12 @@ def main():
         replace_catalog(connection, systems, planets)
         connection.execute(
             """
-            INSERT INTO habitability_ranking (singleton, calculated_at, items)
-            VALUES (true, clock_timestamp(), %s)
+            INSERT INTO habitability_ranking (singleton, calculated_at, items, model)
+            VALUES (true, clock_timestamp(), %s, %s)
             ON CONFLICT (singleton) DO UPDATE
-            SET calculated_at = EXCLUDED.calculated_at, items = EXCLUDED.items
+            SET calculated_at = EXCLUDED.calculated_at, items = EXCLUDED.items, model = EXCLUDED.model
             """,
-            (Jsonb(ranking),),
+            (Jsonb(ranking), RANKING_MODEL),
         )
     print(f"Imported {len(planets)} planets, {len(systems)} host stars and {len(ranking)} ranked candidates")
 

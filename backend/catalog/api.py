@@ -11,7 +11,7 @@ from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
 from .db import create_schema, database_url
-from .ranking import seed_ranking
+from .ranking import RANKING_MODEL, seed_ranking
 from .models import (
     CatalogState, Filters, Planet, PlanetPage, PlanetQuery, Stats, SystemDetail,
     SystemPoint, PHYSICAL_RANGES,
@@ -179,11 +179,10 @@ def catalog_state(db: Database):
 
 @app.get("/api/ranking")
 def ranking(db: Database, limit: Annotated[int, Query(ge=1, le=50)] = 50):
-    # Existing installations can serve the supplied snapshot before their first refresh.
-    exists = db.execute("SELECT to_regclass('habitability_ranking') AS ranking").fetchone()
-    row = None
-    if exists["ranking"] is not None:
-        row = db.execute("SELECT calculated_at, items FROM habitability_ranking").fetchone()
+    row = db.execute(
+        "SELECT calculated_at, items FROM habitability_ranking WHERE model = %s",
+        (RANKING_MODEL,),
+    ).fetchone()
     if row is None:
         return {"source": "team_csv", "calculated_at": None, "items": seed_ranking()[:limit]}
     return {"source": "team_script", "calculated_at": row["calculated_at"], "items": row["items"][:limit]}

@@ -25,9 +25,9 @@ function distribution(items: RankedPlanet[], property: 'radius_earth' | 'tempera
 export function DashboardCharts({ ranking, rankingError }: { ranking: Ranking | null; rankingError: string | null }) {
   return (
     <div className="dashboard-charts">
-      <Chart title="Радиус планет из топ-50 (R⊕)" kind="bar" error={rankingError}
+      <Chart title="Радиус планет рейтинга (R⊕)" kind="bar" error={rankingError}
         data={ranking ? distribution(ranking.items, 'radius_earth', [1, 1.5, 2, 2.5]) : null} />
-      <Chart title="Равновесная температура из топ-50 (К)" kind="line" error={rankingError}
+      <Chart title="Равновесная температура планет рейтинга (К)" kind="line" error={rankingError}
         data={ranking ? distribution(ranking.items, 'temperature_k', [150, 250, 350, 500]) : null} />
     </div>
   )

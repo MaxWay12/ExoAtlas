@@ -27,8 +27,24 @@ ALTER TABLE planets
 CREATE TABLE IF NOT EXISTS habitability_ranking (
     singleton boolean PRIMARY KEY CHECK (singleton),
     calculated_at timestamptz NOT NULL,
-    items jsonb NOT NULL CHECK (jsonb_array_length(items) = 50)
+    items jsonb NOT NULL,
+    model text,
+    CONSTRAINT habitability_ranking_size_check CHECK (jsonb_array_length(items) <= 50)
 );
+
+ALTER TABLE habitability_ranking ADD COLUMN IF NOT EXISTS model text;
+ALTER TABLE habitability_ranking DROP CONSTRAINT IF EXISTS habitability_ranking_items_check;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conrelid = 'habitability_ranking'::regclass AND conname = 'habitability_ranking_size_check'
+    ) THEN
+        ALTER TABLE habitability_ranking ADD CONSTRAINT habitability_ranking_size_check
+            CHECK (jsonb_array_length(items) <= 50);
+    END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS catalog_state (
     singleton boolean PRIMARY KEY CHECK (singleton),

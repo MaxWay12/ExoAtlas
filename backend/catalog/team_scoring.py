@@ -1,641 +1,645 @@
-"""Расчёт рейтинга из planet.py команды."""
+"""Модель рейтинга из final_exoplanet_top50.py команды."""
 
 import numpy as np
 import pandas as pd
 
-from .physical import density_from_mass, estimate_mass
+TOP_N = 50
 
-NUMBER_OF_PLANETS = 50
+MIN_RADIUS_EARTH = 0.5
+MAX_RADIUS_EARTH = 2.0
+EXPANDED_MAX_RADIUS_EARTH = 2.1
 
-# Допустимый диапазон радиусов в радиусах Земли
-MIN_RADIUS = 0.5
-MAX_RADIUS = 3.0
-
-# Диапазон плотности (г/см³) — защита от аномалий
-MIN_DENSITY = 1.0
+MIN_DENSITY = 0.5
 MAX_DENSITY = 20.0
 
-# Константы
-SOLAR_TEMPERATURE = 5772.0
+MIN_STAR_TEMP_K = 2600.0
+MAX_STAR_TEMP_K = 7200.0
 
-# 2. ПОДГОТОВКА ДАННЫХ
-def prepare_data(data):
+EARTH_DENSITY = 5.514
+EARTH_RADIUS = 1.0
+EARTH_FLUX = 1.0
+EARTH_GRAVITY = 1.0
+EARTH_EQ_TEMP_K = 255.0
+SOLAR_TEMPERATURE_K = 5772.0
+KOPPARAPU_REFERENCE_TEMP_K = 5780.0
 
-    print("Обработка полученных данных...")
+STRICT_MASS_PROVENANCE = {"Mass"}
 
-    numeric_columns = [
-        "disc_year",
-        "pl_rade",
-        "pl_bmasse",
-        "pl_eqt",
-        "pl_insol",
-        "pl_orbsmax",
-        "pl_orbeccen",
-        "sy_dist",
-        "st_teff",
-        "st_rad",
-        "st_mass"
-    ]
+WEIGHTS = {
+    # Scenario priorities on a 100-point scale, not calibrated probabilities.
+    "hz_score": 50.0,
+    "radius_score": 35.0,
+    "density_score": 15.0,
+}
 
-    for column in numeric_columns:
+DIAGNOSTIC_SCORES = ("flux_score", "gravity_score", "temperature_score", "eccentricity_score")
+SIGMA_RADIUS = 0.35
+SIGMA_FLUX = 0.50
+SIGMA_DENSITY = 0.50
+SIGMA_GRAVITY = 0.40
+SIGMA_ECCENTRICITY = 0.20
+SIGMA_TEMP_K = 100.0
 
-        if column in data.columns:
+LIMIT_FLAGS = {
+    "pl_rade": "pl_radelim",
+    "pl_bmasse": "pl_bmasselim",
+    "pl_dens": "pl_denslim",
+    "pl_eqt": "pl_eqtlim",
+    "pl_insol": "pl_insollim",
+    "pl_orbsmax": "pl_orbsmaxlim",
+    "pl_orbeccen": "pl_orbeccenlim",
+    "st_teff": "st_tefflim",
+    "st_rad": "st_radlim",
+    "st_lum": "st_lumlim",
+}
 
-            data[column] = pd.to_numeric(
-                data[column],
-                errors="coerce"
-            )
 
-    # Удаляем записи без названия и радиуса.
-    data = data.dropna(
-        subset=["pl_name", "pl_rade"]
-    ).copy()
+# ------------------------------------------------------------
+# 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+# ------------------------------------------------------------
 
-    # Оставляем планеты заданного диапазона размеров.
-    data = data[
-        (data["pl_rade"] >= MIN_RADIUS)
-        &
-        (data["pl_rade"] <= MAX_RADIUS)
-    ].copy()
+def num(value):
+    try:
+        x = float(value)
+        return x if np.isfinite(x) else np.nan
+    except (TypeError, ValueError):
+        return np.nan
 
-    # Удаляем повторяющиеся названия.
-    data = data.drop_duplicates(
-        subset=["pl_name"]
+
+def gaussian_log_score(value, target, sigma):
+    x, x0, s = num(value), num(target), num(sigma)
+    if not (np.isfinite(x) and np.isfinite(x0) and np.isfinite(s)):
+        return np.nan
+    if x <= 0 or x0 <= 0 or s <= 0:
+        return np.nan
+    z = np.log(x / x0) / s
+    return float(100.0 * np.exp(-0.5 * z * z))
+
+
+def esi_component(value, earth_value):
+    x, x0 = num(value), num(earth_value)
+    if not (np.isfinite(x) and np.isfinite(x0)) or x <= 0 or x0 <= 0:
+        return np.nan
+    return float(1.0 - abs((x - x0) / (x + x0)))
+
+
+def prepare_data(data, max_radius=EXPANDED_MAX_RADIUS_EARTH):
+    print("Подготовка данных...")
+    data = data.copy()
+
+    required = {"pl_name", "pl_rade", "st_teff"}
+    if missing := required - set(data.columns):
+        raise ValueError(f"В исходном CSV отсутствуют поля: {', '.join(sorted(missing))}")
+    for column in ("pl_bmasse", "pl_dens", "pl_eqt", "pl_insol", "pl_orbsmax",
+                   "pl_orbeccen", "st_rad", "st_lum", "pl_controv_flag"):
+        if column not in data:
+            data[column] = np.nan
+    if "pl_bmassprov" not in data:
+        data["pl_bmassprov"] = ""
+    if "discoverymethod" not in data:
+        data["discoverymethod"] = ""
+    if "data_retrieved_utc" not in data:
+        data["data_retrieved_utc"] = ""
+
+    text_columns = {"pl_name", "hostname", "discoverymethod", "pl_bmassprov", "data_retrieved_utc"}
+    for col in data.columns:
+        if col not in text_columns:
+            data[col] = pd.to_numeric(data[col], errors="coerce").replace([np.inf, -np.inf], np.nan)
+
+    for column, flag in LIMIT_FLAGS.items():
+        if flag in data:
+            data.loc[data[flag].fillna(0).ne(0), column] = np.nan
+    # Для этих методов pl_orbsmax может содержать проекцию, а не полуось.
+    projected = data["discoverymethod"].isin(["Imaging", "Microlensing"])
+    data.loc[projected, "pl_orbsmax"] = np.nan
+
+    data["pl_name"] = data["pl_name"].astype("string").str.strip()
+    data["pl_bmassprov"] = data["pl_bmassprov"].fillna("").astype(str).str.strip()
+
+    data = data.dropna(subset=["pl_name", "pl_rade"]).copy()
+    data = data[data["pl_name"].ne("")]
+    data = data[data["pl_rade"].between(
+        MIN_RADIUS_EARTH, max_radius
+    )].copy()
+
+    data = data[data["pl_controv_flag"].ne(1)]
+
+    data = data.drop_duplicates(subset=["pl_name"], keep="first")
+    data.reset_index(drop=True, inplace=True)
+
+    print(f"После фильтра радиуса и статуса: {len(data)}")
+    return data
+
+
+# ------------------------------------------------------------
+# 5. МАССА, ПЛОТНОСТЬ И ГРАВИТАЦИЯ
+# ------------------------------------------------------------
+
+def calculate_mass_density_gravity(data):
+    data = data.copy()
+    mass = data["pl_bmasse"]
+    radius = data["pl_rade"]
+    provenance = data["pl_bmassprov"].fillna("").astype(str).str.strip()
+
+    valid_mass = (
+        provenance.isin(STRICT_MASS_PROVENANCE)
+        & mass.notna() & radius.notna()
+        & (mass > 0) & (radius > 0)
     )
 
-    data = data.reset_index(drop=True)
+    data["mass_provenance"] = provenance
+    data["mass_used_for_derived_values"] = valid_mass
 
-    if len(data) < NUMBER_OF_PLANETS:
+    derived_density = pd.Series(np.nan, index=data.index, dtype=float)
+    derived_density.loc[valid_mass] = (
+        EARTH_DENSITY * mass.loc[valid_mass] / radius.loc[valid_mass] ** 3
+    )
 
-        raise RuntimeError(
-            f"Найдено только {len(data)} планет "
-            f"с радиусом от {MIN_RADIUS} до {MAX_RADIUS} "
-            "радиусов Земли. Получить ТОП-50 невозможно."
+    published_density = data["pl_dens"]
+    # В PSCompPars плотность может быть оценкой на основе массы из архива.
+    # При строгом режиме используем её для балла только с массой типа Mass.
+    valid_catalog_density = valid_mass & published_density.gt(0)
+
+    data["density_calculated"] = derived_density
+    data["density_final"] = published_density.where(
+        valid_catalog_density, derived_density
+    )
+    data["density_source"] = np.where(
+        valid_catalog_density,
+        "NASA: pl_dens",
+        np.select(
+            [derived_density.notna(), published_density.gt(0)],
+            ["Расчёт по NASA Mass и радиусу", "NASA: pl_dens; без Mass исключена из рейтинга"],
+            default="Нет надёжных данных",
         )
+    )
 
-    print(
-        "После предварительного отбора осталось:",
-        len(data)
+    gravity = pd.Series(np.nan, index=data.index, dtype=float)
+    gravity.loc[valid_mass] = (
+        mass.loc[valid_mass] / radius.loc[valid_mass] ** 2
+    )
+    data["gravity_earth"] = gravity
+    data["gravity_source"] = np.where(
+        gravity.notna(), "Расчёт по NASA Mass и радиусу", "Не рассчитана"
     )
 
     return data
 
-# 2.1. ИМПУТАЦИЯ МАССЫ И ПЛОТНОСТИ (НОВОЕ)
-def impute_mass_and_density(data):
 
-    print("Импутация массы и плотности...")
+# ------------------------------------------------------------
+# 6. СВЕТИМОСТЬ
+# ------------------------------------------------------------
 
-    # Сохраняем источник массы
-    data["mass_source"] = np.where(
-        data["pl_bmasse"].notna(),
-        "NASA",
-        "Расчёт (масса-радиус)"
+def calculate_luminosity(data):
+    data = data.copy()
+    r = data["st_rad"]
+    t = data["st_teff"]
+    valid = r.notna() & t.notna() & (r > 0) & (t > 0)
+
+    luminosity = pd.Series(np.nan, index=data.index, dtype=float)
+    luminosity.loc[valid] = (
+        r.loc[valid] ** 2 * (t.loc[valid] / SOLAR_TEMPERATURE_K) ** 4
     )
-
-    # Заполняем пропуски массы
-    mask_mass = data["pl_bmasse"].isna() & data["pl_rade"].notna()
-    data.loc[mask_mass, "pl_bmasse"] = data.loc[mask_mass, "pl_rade"].apply(estimate_mass)
-
-    # Расчёт плотности (если нет опубликованной)
-    def calculate_density(row):
-        if pd.notna(row["pl_dens"]):
-            return row["pl_dens"]
-        if pd.isna(row["pl_bmasse"]) or pd.isna(row["pl_rade"]) or row["pl_rade"] <= 0:
-            return np.nan
-        return density_from_mass(row["pl_bmasse"], row["pl_rade"])
-
-    # Предполагаем, что pl_dens уже есть в данных
-    if "pl_dens" not in data.columns:
-        data["pl_dens"] = np.nan
-
-    data["density_final"] = data.apply(calculate_density, axis=1)
-
-    print(f"Восстановлено масс: {mask_mass.sum()}")
-
+    catalog_luminosity = 10.0 ** data["st_lum"]
+    data["luminosity_solar"] = catalog_luminosity.where(
+        np.isfinite(catalog_luminosity) & catalog_luminosity.gt(0), luminosity
+    )
     return data
 
-# 3. РАСЧЕТ СВЕТИМОСТИ ЗВЕЗДЫ
-def calculate_luminosity(row):
 
-    star_radius = row.get("st_rad")
-    star_temperature = row.get("st_teff")
+# ------------------------------------------------------------
+# 7. ПОТОК ИЗЛУЧЕНИЯ
+# ------------------------------------------------------------
 
-    if pd.isna(star_radius) or pd.isna(star_temperature):
-        return np.nan
+def calculate_insolation(data):
+    data = data.copy()
+    published = data["pl_insol"]
+    valid_published = published.notna() & (published > 0)
 
-    if star_radius <= 0 or star_temperature <= 0:
-        return np.nan
+    luminosity = data["luminosity_solar"]
+    a = data["pl_orbsmax"]
+    e = data["pl_orbeccen"]
 
-    # Светимость относительно Солнца.
-    luminosity = (
-        star_radius ** 2
-        *
-        (star_temperature / SOLAR_TEMPERATURE) ** 4
+    valid_e = e.isna() | (e.ge(0) & e.lt(1))
+    valid_calc = (
+        luminosity.notna() & a.notna()
+        & (luminosity > 0) & (a > 0) & valid_e
     )
 
-    return luminosity
+    e_used = e.fillna(0.0)
+    calculated = pd.Series(np.nan, index=data.index, dtype=float)
+    calculated.loc[valid_calc] = (
+        luminosity.loc[valid_calc]
+        / (
+            a.loc[valid_calc] ** 2
+            * np.sqrt(1.0 - e_used.loc[valid_calc] ** 2)
+        )
+    )
 
-# 4. РАСЧЕТ ПОТОКА ИЗЛУЧЕНИЯ
-def calculate_insolation(row):
+    data["insolation_flux"] = published.where(valid_published, calculated)
 
-    # Если поток уже опубликован NASA, используем его.
-    published_flux = row.get("pl_insol")
+    source = pd.Series("Нет данных", index=data.index, dtype="object")
+    source.loc[valid_calc] = np.where(
+        e.loc[valid_calc].isna(),
+        "Расчёт; e неизвестен, принято e=0",
+        "Расчёт по светимости, большой полуоси и эксцентриситету"
+    )
+    source.loc[valid_published] = "NASA: pl_insol"
+    data["insolation_source"] = source
+    return data
 
-    if pd.notna(published_flux) and published_flux > 0:
-        return published_flux
 
-    # Иначе рассчитываем поток по светимости звезды и большой полуоси орбиты.
-    luminosity = calculate_luminosity(row)
+# ------------------------------------------------------------
+# 8. МОДЕЛЬ ОБИТАЕМОЙ ЗОНЫ KOPPARAPU
+# ------------------------------------------------------------
 
-    orbital_distance = row.get("pl_orbsmax")
-
-    if (
-        pd.isna(luminosity)
-        or pd.isna(orbital_distance)
-        or orbital_distance <= 0
-    ):
-        return np.nan
-
-    # Поток в единицах потока Земли.
-    flux = luminosity / (orbital_distance ** 2)
-
-    return flux
-
-# 5. ГРАНИЦЫ ОБИТАЕМОЙ ЗОНЫ (РАСШИРЕНО ДО 2500 K)
-def calculate_hz_limits(star_temperature):
-
-    if pd.isna(star_temperature):
+def calculate_hz_flux_limits(star_temperature):
+    t_star = num(star_temperature)
+    if not np.isfinite(t_star):
+        return np.nan, np.nan
+    if not MIN_STAR_TEMP_K <= t_star <= MAX_STAR_TEMP_K:
         return np.nan, np.nan
 
-    # Приближение Коппарапу применяется в диапазоне эффективных температур 2500–7200 K.
-    if not 2500 <= star_temperature <= 7200:
-        return np.nan, np.nan
+    t = t_star - KOPPARAPU_REFERENCE_TEMP_K
 
-    t = star_temperature - 5780.0
-
-    # Внутренняя граница: Runaway Greenhouse.
     inner = (
-        1.107
-        + 1.332e-4 * t
-        + 1.58e-8 * t**2
-        - 8.308e-12 * t**3
-        - 1.931e-15 * t**4
+        1.107 + 1.332e-4 * t + 1.580e-8 * t**2
+        - 8.308e-12 * t**3 - 1.931e-15 * t**4
     )
-
-    # Внешняя граница: Maximum Greenhouse.
     outer = (
-        0.356
-        + 6.171e-5 * t
-        + 1.698e-9 * t**2
-        - 3.198e-12 * t**3
-        - 5.575e-16 * t**4
+        0.356 + 6.171e-5 * t + 1.698e-9 * t**2
+        - 3.198e-12 * t**3 - 5.575e-16 * t**4
     )
 
+    if inner <= 0 or outer <= 0 or outer >= inner:
+        return np.nan, np.nan
+    return float(inner), float(outer)
+
+
+def calculate_optimistic_hz_flux_limits(star_temperature):
+    t_star = num(star_temperature)
+    if not MIN_STAR_TEMP_K <= t_star <= MAX_STAR_TEMP_K:
+        return np.nan, np.nan
+    t = t_star - KOPPARAPU_REFERENCE_TEMP_K
+
+    # Recent Venus / Early Mars (Kopparapu et al., 2014, Table 1).
+    inner = 1.776 + 2.136e-4 * t + 2.533e-8 * t**2 - 1.332e-11 * t**3 - 3.097e-15 * t**4
+    outer = 0.320 + 5.547e-5 * t + 1.526e-9 * t**2 - 2.874e-12 * t**3 - 5.011e-16 * t**4
     return inner, outer
 
-# 6. ОПРЕДЕЛЕНИЕ ПОЛОЖЕНИЯ ПЛАНЕТЫ
-def determine_habitable_zone(row):
 
-    flux = row["insolation_flux"]
-    star_temperature = row["st_teff"]
-
-    if pd.isna(flux):
-        return "Недостаточно данных"
-
-    inner, outer = calculate_hz_limits(star_temperature)
-
-    if pd.isna(inner) or pd.isna(outer):
-        return "Невозможно определить"
-
-    # Внутренняя граница получает больший поток,
-    # внешняя — меньший.
-    if outer <= flux <= inner:
-        return "В обитаемой зоне"
-
-    if flux > inner:
-        return "Внутри внутренней границы"
-
-    return "За внешней границей"
-
-# 7. ОЦЕНКА СХОДСТВА С ЗЕМЛЕЙ
-def calculate_radius_score(radius):
-
-    if pd.isna(radius) or radius <= 0:
-        return 0
-
-    # Максимальный балл при радиусе, близком к радиусу Земли.
-    score = np.exp(
-        -abs(np.log(radius)) / 0.7
-    )
-
-    return float(score)
+def optimistic_orbit_status(inner, outer, peri, apo, a):
+    if np.isfinite(peri):
+        if peri >= inner and apo <= outer:
+            return "Вся орбита в оптимистической HZ"
+        if peri <= outer and apo >= inner:
+            return "Орбита пересекает оптимистическую HZ"
+        return "Орбита вне оптимистической HZ"
+    if inner <= a <= outer:
+        return "В оптимистической HZ по круговому приближению"
+    return "Вне оптимистической HZ по круговому приближению"
 
 
-def calculate_flux_score(flux):
+def optimistic_flux_status(flux, s_inner, s_outer):
+    if not flux > 0 or not np.isfinite(s_inner):
+        return "Недостаточно данных для проверки оптимистической HZ"
+    if s_outer <= flux <= s_inner:
+        return "Поток соответствует оптимистической HZ; геометрия неизвестна"
+    return "Поток вне границ оптимистической HZ"
 
-    if pd.isna(flux) or flux <= 0:
-        return 0
 
-    # Максимальный балл при потоке, близком к земному.
-    score = np.exp(
-        -abs(np.log(flux)) / 1.1
-    )
+def calculate_habitable_zone(data):
+    data = data.copy()
+    geometry = []
+    for _, row in data.iterrows():
+        s_inner, s_outer = calculate_hz_flux_limits(row["st_teff"])
+        luminosity = num(row["luminosity_solar"])
+        a = num(row["pl_orbsmax"])
+        e = num(row["pl_orbeccen"])
+        flux = num(row["insolation_flux"])
+        r_inner = np.sqrt(luminosity / s_inner) if luminosity > 0 else np.nan
+        r_outer = np.sqrt(luminosity / s_outer) if luminosity > 0 else np.nan
+        has_ellipse = a > 0 and 0 <= e < 1
+        r_peri = a * (1.0 - e) if has_ellipse else np.nan
+        r_apo = a * (1.0 + e) if has_ellipse else np.nan
 
-    return float(score)
+        if not np.isfinite(s_inner):
+            status = (
+                "Температура звезды вне диапазона модели HZ"
+                if np.isfinite(num(row["st_teff"]))
+                else "Неизвестна температура звезды"
+            )
+        elif has_ellipse and np.isfinite(r_inner):
+            if r_peri >= r_inner and r_apo <= r_outer:
+                status = "Вся орбита в консервативной HZ"
+            elif r_apo < r_inner:
+                status = "Орбита внутри внутренней границы HZ"
+            elif r_peri > r_outer:
+                status = "Орбита за внешней границей HZ"
+            else:
+                status = "Орбита пересекает границу HZ"
+        elif a > 0 and np.isfinite(r_inner):
+            if r_inner <= a <= r_outer:
+                status = "В HZ по круговой аппроксимации; эксцентриситет неизвестен"
+            elif a < r_inner:
+                status = "Внутри внутренней границы HZ; e неизвестен"
+            else:
+                status = "За внешней границей HZ; e неизвестен"
+        elif not flux > 0:
+            status = "Недостаточно данных для проверки HZ"
+        elif s_outer <= flux <= s_inner:
+            status = "Поток соответствует HZ; орбитальная проверка невозможна"
+        elif flux > s_inner:
+            status = "Поток выше внутренней границы HZ"
+        else:
+            status = "Поток ниже внешней границы HZ"
+        opt_inner_flux, opt_outer_flux = calculate_optimistic_hz_flux_limits(row["st_teff"])
+        opt_inner = np.sqrt(luminosity / opt_inner_flux) if luminosity > 0 else np.nan
+        opt_outer = np.sqrt(luminosity / opt_outer_flux) if luminosity > 0 else np.nan
+        if a > 0 and np.isfinite(opt_inner):
+            opt_status = optimistic_orbit_status(opt_inner, opt_outer, r_peri, r_apo, a)
+        else:
+            opt_status = optimistic_flux_status(flux, opt_inner_flux, opt_outer_flux)
+        geometry.append((
+            status, r_inner, r_outer, r_peri, r_apo, s_inner, s_outer, opt_status,
+            opt_inner, opt_outer, opt_inner_flux, opt_outer_flux,
+        ))
+    columns = [
+        "hz_status", "hz_inner_au", "hz_outer_au", "orbit_periastron_au",
+        "orbit_apastron_au", "hz_inner_flux", "hz_outer_flux", "optimistic_hz_status",
+        "optimistic_hz_inner_au", "optimistic_hz_outer_au",
+        "optimistic_hz_inner_flux", "optimistic_hz_outer_flux",
+    ]
+    data[columns] = pd.DataFrame(geometry, columns=columns, index=data.index)
+    return data
+
+
+# ------------------------------------------------------------
+# 9. БАЛЛЫ ФИЗИЧЕСКИХ ПОКАЗАТЕЛЕЙ
+# ------------------------------------------------------------
+
+OPTIMISTIC_HZ_SCORES = {
+    "Вся орбита в оптимистической HZ": 65.0,
+    "В оптимистической HZ по круговому приближению": 55.0,
+    "Орбита пересекает оптимистическую HZ": 50.0,
+    "Поток соответствует оптимистической HZ; геометрия неизвестна": 45.0,
+}
+
+
+def calculate_hz_score(row):
+    status = row["hz_status"]
+    if status == "Вся орбита в консервативной HZ":
+        return 100.0
+    if status.startswith("В HZ по круговой аппроксимации"):
+        return 85.0
+    if status.startswith("Поток соответствует HZ"):
+        return 70.0
+    if status == "Орбита пересекает границу HZ":
+        return 60.0
+    optimistic_score = OPTIMISTIC_HZ_SCORES.get(row["optimistic_hz_status"])
+    if optimistic_score is not None:
+        return optimistic_score
+    if status in (
+        "Температура звезды вне диапазона модели HZ",
+        "Неизвестна температура звезды",
+        "Недостаточно данных для проверки HZ",
+    ):
+        return np.nan
+    return 0.0
+
+
+def calculate_flux_score(row):
+    flux = num(row["insolation_flux"])
+    s_inner = num(row["hz_inner_flux"])
+    s_outer = num(row["hz_outer_flux"])
+    if not np.isfinite(flux) or flux <= 0:
+        return np.nan
+
+    if (
+        np.isfinite(s_inner) and np.isfinite(s_outer)
+        and s_inner > 0 and s_outer > 0
+    ):
+        target = np.sqrt(s_inner * s_outer)
+    else:
+        target = EARTH_FLUX
+
+    return gaussian_log_score(flux, target, SIGMA_FLUX)
 
 
 def calculate_temperature_score(temperature):
+    t = num(temperature)
+    if not np.isfinite(t) or t <= 0:
+        return np.nan
+    z = (t - EARTH_EQ_TEMP_K) / SIGMA_TEMP_K
+    return float(100.0 * np.exp(-0.5 * z**2))
 
-    if pd.isna(temperature) or temperature <= 0:
-        return 0
 
-    # 255 K — приблизительная равновесная температура Земли без учета парникового эффекта.
-    score = np.exp(
-        -abs(temperature - 255.0) / 100.0
+def calculate_eccentricity_score(eccentricity):
+    e = num(eccentricity)
+    if not np.isfinite(e) or not 0 <= e < 1:
+        return np.nan
+    z = e / SIGMA_ECCENTRICITY
+    return float(100.0 * np.exp(-0.5 * z**2))
+
+
+def calculate_esi_proxy(row):
+    r_score = esi_component(row["pl_rade"], EARTH_RADIUS)
+    f_score = esi_component(row["insolation_flux"], EARTH_FLUX)
+
+    available = int(np.isfinite(r_score)) + int(np.isfinite(f_score))
+    completeness = 100.0 * available / 2.0
+    esi = (
+        float(np.sqrt(r_score * f_score))
+        if available == 2 else np.nan
     )
 
-    return float(score)
+    if not np.isfinite(esi):
+        esi_class = "Недостаточно данных"
+    elif esi >= 0.80:
+        esi_class = "Высокое сходство по выбранным параметрам"
+    elif esi >= 0.60:
+        esi_class = "Умеренное сходство по выбранным параметрам"
+    else:
+        esi_class = "Низкое сходство по выбранным параметрам"
 
-# 8. РАСЧЕТ ИТОГОВОГО РЕЙТИНГА
-def calculate_priority_score(row):
+    return pd.Series({
+        "esi_radius_component": r_score,
+        "esi_flux_component": f_score,
+        "earth_similarity_index_proxy": esi,
+        "earth_similarity_percent": esi * 100.0 if np.isfinite(esi) else np.nan,
+        "esi_data_completeness_pct": completeness,
+        "esi_class": esi_class,
+    })
 
-    radius_score = calculate_radius_score(
-        row["pl_rade"]
+
+def calculate_scores(data):
+    data = data.copy()
+    if data.empty:
+        for column in (*WEIGHTS, *DIAGNOSTIC_SCORES, "physical_score_known_only", "data_coverage_pct",
+                       "priority_score", "confidence", "esi_radius_component",
+                       "esi_flux_component", "earth_similarity_index_proxy",
+                       "earth_similarity_percent", "esi_data_completeness_pct", "esi_class"):
+            data[column] = pd.Series(index=data.index, dtype="object")
+        return data
+
+    data["hz_score"] = data.apply(calculate_hz_score, axis=1)
+    data["flux_score"] = data.apply(calculate_flux_score, axis=1)
+    data["radius_score"] = data["pl_rade"].apply(
+        lambda x: gaussian_log_score(x, EARTH_RADIUS, SIGMA_RADIUS)
+    )
+    data["density_score"] = data["density_final"].apply(
+        lambda x: gaussian_log_score(x, EARTH_DENSITY, SIGMA_DENSITY)
+    )
+    data["gravity_score"] = data["gravity_earth"].apply(
+        lambda x: gaussian_log_score(x, EARTH_GRAVITY, SIGMA_GRAVITY)
+    )
+    data["temperature_score"] = data["pl_eqt"].apply(
+        calculate_temperature_score
+    )
+    data["eccentricity_score"] = data["pl_orbeccen"].apply(
+        calculate_eccentricity_score
     )
 
-    flux_score = calculate_flux_score(
-        row["insolation_flux"]
+    def known_parameter_mean(row):
+        numerator, denominator = 0.0, 0.0
+        for column, weight in WEIGHTS.items():
+            value = num(row[column])
+            if np.isfinite(value):
+                numerator += value * weight
+                denominator += weight
+        return numerator / denominator if denominator > 0 else np.nan
+
+    data["physical_score_known_only"] = data.apply(
+        known_parameter_mean, axis=1
     )
 
-    temperature_score = calculate_temperature_score(
-        row["pl_eqt"]
+    def coverage(row):
+        available_weight = sum(
+            weight for column, weight in WEIGHTS.items()
+            if np.isfinite(num(row[column]))
+        )
+        return 100.0 * available_weight / sum(WEIGHTS.values())
+
+    data["data_coverage_pct"] = data.apply(coverage, axis=1)
+
+    data["priority_score"] = (
+        data["physical_score_known_only"]
+        * data["data_coverage_pct"] / 100.0
     )
 
-    # Бонус за попадание в рассчитанную обитаемую зону.
-    hz_bonus = (
-        15
-        if row["hz_status"] == "В обитаемой зоне"
-        else 0
+    def coverage_level(row):
+        c = row["data_coverage_pct"]
+        if c >= 80:
+            return "Высокая полнота"
+        if c >= 55:
+            return "Средняя полнота"
+        return "Низкая полнота"
+
+    data["confidence"] = data.apply(coverage_level, axis=1)
+
+    esi = data.apply(calculate_esi_proxy, axis=1)
+    data = pd.concat([data, esi], axis=1)
+    return data
+
+
+# ------------------------------------------------------------
+# 10. ОТБОР ДО 50 КАНДИДАТОВ
+# ------------------------------------------------------------
+
+def is_hz_candidate(status):
+    return (
+        status == "Вся орбита в консервативной HZ"
+        or status.startswith("В HZ по круговой аппроксимации")
+        or status.startswith("Поток соответствует HZ")
     )
 
-    # Дополнительный балл за наличие массы.
-    mass_bonus = (
-        5
-        if pd.notna(row["pl_bmasse"])
-        else 0
+
+def select_top50(data, strict=False):
+    print("Формирование ТОП-50...")
+    data = data.copy()
+
+    # Каталожная плотность за пределами диапазона исключает объект,
+    # даже если происхождение массы не позволяет начислить балл плотности.
+    density_for_filter = data["pl_dens"].where(data["pl_dens"].gt(0), data["density_final"])
+    known_density = density_for_filter.notna()
+    valid_density = density_for_filter.between(MIN_DENSITY, MAX_DENSITY)
+    data = data[(~known_density) | valid_density].copy()
+    print(f"После фильтра плотности: {len(data)}")
+
+    conservative = data["hz_status"].map(is_hz_candidate).astype(bool)
+    if strict:
+        data["is_hz_candidate"] = conservative & data["pl_rade"].le(MAX_RADIUS_EARTH)
+    else:
+        in_optimistic_zone = data["optimistic_hz_status"].isin(OPTIMISTIC_HZ_SCORES)
+        data["is_hz_candidate"] = (conservative | in_optimistic_zone) & data["pl_rade"].le(
+            EXPANDED_MAX_RADIUS_EARTH
+        )
+    candidates = data[data["is_hz_candidate"]].copy()
+    print(f"Кандидатов в HZ: {len(candidates)}")
+
+    candidates = candidates.sort_values(
+        by=[
+            "priority_score",
+            "data_coverage_pct",
+            "earth_similarity_index_proxy",
+            "pl_rade",
+            "pl_name",
+        ],
+        ascending=[False, False, False, True, True],
+        na_position="last",
     )
 
-    # Небольшой бонус за известную орбитальную эксцентричность.
-    eccentricity = row["pl_orbeccen"]
+    top = candidates.head(TOP_N).copy().reset_index(drop=True)
+    top.insert(0, "rank", range(1, len(top) + 1))
+    return top
 
-    eccentricity_bonus = 0
 
-    if pd.notna(eccentricity):
+# ------------------------------------------------------------
+# 11. НЕИЗВЕСТНЫЕ УСЛОВИЯ
+# ------------------------------------------------------------
 
-        if 0 <= eccentricity <= 0.3:
-            eccentricity_bonus = 5
-
-        elif eccentricity <= 0.5:
-            eccentricity_bonus = 2
-
-    # Бонус за наличие основных параметров звезды.
-    stellar_bonus = 0
-
-    if pd.notna(row["st_teff"]):
-        stellar_bonus += 3
-
-    if pd.notna(row["st_rad"]):
-        stellar_bonus += 3
-
-    if pd.notna(row["st_mass"]):
-        stellar_bonus += 2
-
-    # Итоговый авторский рейтинг.
-    score = (
-        radius_score * 25
-        +
-        flux_score * 30
-        +
-        temperature_score * 15
-        +
-        hz_bonus
-        +
-        mass_bonus
-        +
-        eccentricity_bonus
-        +
-        stellar_bonus
-    )
-
-    return round(float(score), 2)
-
-# 9. ОЦЕНКА ПОЛНОТЫ ДАННЫХ
-def determine_data_quality(row):
-
-    available = 0
-
-    important_fields = [
-        "pl_rade",
-        "pl_bmasse",
-        "pl_eqt",
-        "insolation_flux",
-        "pl_orbeccen",
-        "st_teff",
-        "st_rad",
-        "st_mass",
-        "sy_dist"
-    ]
-
-    for field in important_fields:
-
-        if pd.notna(row.get(field)):
-            available += 1
-
-    if available >= 8:
-        return "Высокая"
-
-    if available >= 5:
-        return "Средняя"
-
-    return "Низкая"
-
-# 10. ОПРЕДЕЛЕНИЕ КАТЕГОРИИ КАНДИДАТА
-def determine_category(row):
-
-    status = row["hz_status"]
-
-    if status == "В обитаемой зоне":
-
-        return "Каменистый кандидат в обитаемой зоне"
-
-    if status == "Внутри внутренней границы":
-
-        return "Кандидат с повышенным потоком излучения"
-
-    if status == "За внешней границей":
-
-        return "Кандидат с пониженным потоком излучения"
-
-    return "Кандидат с недостаточными данными"
-
-# 11. ФОРМИРОВАНИЕ СПИСКА НЕДОСТАЮЩИХ ДАННЫХ
 def determine_missing_data(row):
-
     missing = []
-
     fields = {
-        "pl_bmasse": "Масса планеты",
+        "pl_bmasse": "Опубликованная масса планеты",
+        "density_final": "Плотность",
+        "gravity_earth": "Гравитация",
         "pl_eqt": "Равновесная температура",
         "insolation_flux": "Поток излучения",
-        "pl_orbeccen": "Эксцентриситет орбиты",
+        "pl_orbeccen": "Эксцентриситет",
         "st_teff": "Температура звезды",
         "st_rad": "Радиус звезды",
         "st_mass": "Масса звезды",
-        "sy_dist": "Расстояние до системы"
+        "sy_dist": "Расстояние до системы",
     }
-
-    for field, description in fields.items():
-
-        if pd.isna(row.get(field)):
-            missing.append(description)
+    for key, label in fields.items():
+        if pd.isna(row.get(key)):
+            missing.append(label)
 
     missing.extend([
-        "Состав атмосферы",
-        "Атмосферное давление",
+        "Состав и давление атмосферы",
         "Наличие жидкой воды на поверхности",
-        "Уровень радиации",
+        "Температура поверхности",
+        "Радиационная обстановка у поверхности",
         "Магнитное поле",
-        "Пригодность атмосферы для дыхания"
+        "Пригодность атмосферы для дыхания",
+        "Активность звезды и частота вспышек",
     ])
-
-    if not missing:
-        return "Нет пропусков в основных параметрах; свойства атмосферы не подтверждены"
-
     return "; ".join(missing)
 
-# 12. ОБРАБОТКА ВСЕХ ПЛАНЕТ
+
 def process_planets(data):
+    print("Расчёт характеристик и индексов...")
+    data = calculate_mass_density_gravity(data)
+    data = calculate_luminosity(data)
+    data = calculate_insolation(data)
+    data = calculate_habitable_zone(data)
+    data = calculate_scores(data)
 
-    print("Расчет характеристик экзопланет...")
-
-    # Расчет потока излучения.
-    data["insolation_flux"] = data.apply(
-        calculate_insolation,
-        axis=1
-    )
-
-    # Определение обитаемой зоны.
-    data["hz_status"] = data.apply(
-        determine_habitable_zone,
-        axis=1
-    )
-
-    # Расстояние до обитаемой зоны в а.е.
-    data["luminosity_solar"] = data.apply(
-        calculate_luminosity,
-        axis=1
-    )
-
-    def get_hz_distances(row):
-
-        inner_flux, outer_flux = calculate_hz_limits(
-            row["st_teff"]
-        )
-
-        luminosity = row["luminosity_solar"]
-
-        if (
-            pd.isna(inner_flux)
-            or pd.isna(outer_flux)
-            or pd.isna(luminosity)
-            or luminosity <= 0
-        ):
-            return pd.Series(
-                [np.nan, np.nan]
-            )
-
-        inner_distance = np.sqrt(
-            luminosity / inner_flux
-        )
-
-        outer_distance = np.sqrt(
-            luminosity / outer_flux
-        )
-
-        return pd.Series(
-            [inner_distance, outer_distance]
-        )
-
-    data[
-        ["hz_inner_au", "hz_outer_au"]
-    ] = data.apply(
-        get_hz_distances,
-        axis=1
-    )
-
-    # Расчет рейтинга.
-    data["priority_score"] = data.apply(
-        calculate_priority_score,
-        axis=1
-    )
-
-    # Оценка качества данных.
-    data["data_quality"] = data.apply(
-        determine_data_quality,
-        axis=1
-    )
-
-    # Категория планеты.
-    data["candidate_category"] = data.apply(
-        determine_category,
-        axis=1
-    )
-
-    # Недостающие характеристики.
-    data["missing_data"] = data.apply(
-        determine_missing_data,
-        axis=1
-    )
-
-    # Отдельный статус пригодности для человека.
+    data["missing_data"] = [determine_missing_data(row) for _, row in data.iterrows()]
     data["human_habitability_status"] = (
-        "Не подтверждена: нет достаточных данных "
-        "об атмосфере, давлении, воде и радиации"
+        "Не установлена: рейтинг не подтверждает наличие пригодной "
+        "для дыхания атмосферы, безопасного давления, жидкой воды "
+        "или безопасного уровня радиации."
     )
-
     return data
-
-# 13. ВЫБОР ТОП-50
-def select_top50(data):
-
-    print("Формирование рейтинга ТОП-50...")
-
-    # Фильтр по плотности (защита от аномалий)
-    data = data[
-        (data["density_final"].isna()) |
-        (
-            (data["density_final"] >= MIN_DENSITY) &
-            (data["density_final"] <= MAX_DENSITY)
-        )
-    ].copy()
-
-    print(f"После фильтра плотности: {len(data)}")
-
-    # Сначала сортируем по итоговому рейтингу. При одинаковом рейтинге выше ставится планета с более полными данными.
-    quality_order = {
-        "Высокая": 3,
-        "Средняя": 2,
-        "Низкая": 1
-    }
-
-    data["quality_order"] = data[
-        "data_quality"
-    ].map(quality_order)
-
-    data = data.sort_values(
-        by=[
-            "priority_score",
-            "quality_order",
-            "pl_rade"
-        ],
-        ascending=[
-            False,
-            False,
-            True
-        ]
-    )
-
-    top50 = data.head(
-        NUMBER_OF_PLANETS
-    ).copy()
-
-    top50 = top50.reset_index(drop=True)
-
-    top50.insert(
-        0,
-        "rank",
-        range(1, len(top50) + 1)
-    )
-
-    if len(top50) != NUMBER_OF_PLANETS:
-
-        raise RuntimeError(
-            f"Получено {len(top50)} планет вместо 50."
-        )
-
-    return top50
-
-# 14. ПОДГОТОВКА ИТОГОВОГО CSV
-def prepare_output(top50):
-
-    output_columns = [
-        "rank",
-        "pl_name",
-        "hostname",
-        "disc_year",
-        "discoverymethod",
-        "pl_rade",
-        "pl_bmasse",
-        "mass_source",
-        "pl_bmassprov",
-        "pl_eqt",
-        "insolation_flux",
-        "pl_orbsmax",
-        "pl_orbeccen",
-        "sy_dist",
-        "st_teff",
-        "st_rad",
-        "st_mass",
-        "luminosity_solar",
-        "hz_inner_au",
-        "hz_outer_au",
-        "hz_status",
-        "priority_score",
-        "data_quality",
-        "candidate_category",
-        "human_habitability_status",
-        "missing_data"
-    ]
-
-    # Оставляем только существующие столбцы.
-    output_columns = [
-        column
-        for column in output_columns
-        if column in top50.columns
-    ]
-
-    result = top50[output_columns].copy()
-
-    # Переименовываем столбцы для удобства чтения.
-    result = result.rename(
-        columns={
-            "rank": "Место в рейтинге",
-            "pl_name": "Название планеты",
-            "hostname": "Родительская звезда",
-            "disc_year": "Год открытия",
-            "discoverymethod": "Метод обнаружения",
-            "pl_rade": "Радиус (радиусы Земли)",
-            "pl_bmasse": "Масса (массы Земли)",
-            "mass_source": "Источник массы",
-            "pl_bmassprov": "Происхождение оценки массы",
-            "pl_eqt": "Равновесная температура (K)",
-            "insolation_flux": "Поток излучения (потоки Земли)",
-            "pl_orbsmax": "Большая полуось орбиты (а.е.)",
-            "pl_orbeccen": "Эксцентриситет орбиты",
-            "sy_dist": "Расстояние до системы (пк)",
-            "st_teff": "Температура звезды (K)",
-            "st_rad": "Радиус звезды (радиусы Солнца)",
-            "st_mass": "Масса звезды (массы Солнца)",
-            "luminosity_solar": "Светимость звезды (светимости Солнца)",
-            "hz_inner_au": "Внутренняя граница HZ (а.е.)",
-            "hz_outer_au": "Внешняя граница HZ (а.е.)",
-            "hz_status": "Положение относительно HZ",
-            "priority_score": "Итоговый рейтинг",
-            "data_quality": "Полнота данных",
-            "candidate_category": "Категория кандидата",
-            "human_habitability_status": "Пригодность для человека",
-            "missing_data": "Недостающие данные"
-        }
-    )
-
-    return result

@@ -12,8 +12,11 @@ export function RankDetails({ planet }: { planet: RankedPlanet }) {
   return (
     <div className="rank-details">
       <p><strong>Место {planet.rank} · {score.format(planet.score)} балла</strong></p>
-      <p>{planet.category}. Полнота данных — {planet.quality.toLowerCase()}.</p>
+      <p>{planet.category}. {planet.quality}{planet.data_coverage_pct != null && ` (${number.format(planet.data_coverage_pct)}%)`}.</p>
       <dl>
+        <dt>Консервативная зона</dt><dd>{planet.zone}</dd>
+        {planet.optimistic_zone && <><dt>Оптимистическая зона</dt><dd>{planet.optimistic_zone}</dd></>}
+        {planet.earth_similarity_percent != null && <><dt>Сходство с Землёй</dt><dd>{number.format(planet.earth_similarity_percent)}%</dd></>}
         <dt>Звезда</dt><dd>{planet.hostname ?? '—'}</dd>
         <dt>Радиус</dt><dd>{value(planet.radius_earth, 'R⊕')}</dd>
         <dt>Масса</dt><dd>{value(planet.mass_earth, 'M⊕')} · {planet.mass_source}{planet.mass_provenance && ' / ' + planet.mass_provenance}</dd>
@@ -46,7 +49,7 @@ export function RankingTable({ ranking, error }: { ranking: Ranking | null; erro
   return (
     <section aria-labelledby="ranking-title">
       <h2 id="ranking-title">Топ-50 по индексу жизнепригодности</h2>
-      <p className="muted">Индекс команды учитывает радиус, поток излучения, температуру и бонусы за обитаемую зону и параметры системы.</p>
+      <p className="muted">В рейтинге до 50 кандидатов. Обитаемая зона даёт 50% веса, радиус — 35%, плотность — 15%. Пропуски снижают итоговый балл.</p>
       <PlanetFilters onApply={(ranges, search) => { setFilters(ranges); setQuery(search.toLowerCase()) }} />
       {error ? <p role="alert">Рейтинг недоступен. {error}</p> : !ranking ? <p role="status">Загрузка рейтинга…</p> : (
         <>

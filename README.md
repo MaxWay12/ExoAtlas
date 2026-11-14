@@ -9,7 +9,7 @@
 | [frontend](frontend/) | React, TypeScript и Three.js. Интерфейс и 3D-сцена. |
 | [backend](backend/) | FastAPI, PostgreSQL и Docker Compose. Импорт из NASA TAP и API. |
 | [backend/catalog/team_scoring.py](backend/catalog/team_scoring.py) | Формула рейтинга команды. |
-| [backend/catalog/ranking_seed.csv](backend/catalog/ranking_seed.csv) | Исходный рейтинг команды до первого успешного пересчёта. |
+| [backend/catalog/ranking_seed.json](backend/catalog/ranking_seed.json) | Рейтинг по новой модели до первого успешного пересчёта. |
 
 ## Локальный запуск
 

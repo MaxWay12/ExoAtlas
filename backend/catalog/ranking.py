@@ -1,64 +1,62 @@
-import csv
+import json
+import math
 from functools import lru_cache
-from io import StringIO
 from pathlib import Path
 
-from .physical import density_from_mass
+import pandas as pd
 
+from . import team_scoring as team
+
+RANKING_MODEL = "team_v2"
 RANKING_COLUMNS = (
-    "pl_bmasse", "pl_bmassprov", "pl_eqt", "pl_insol", "pl_orbeccen",
-    "st_teff", "st_rad", "st_mass",
+    "pl_bmasse", "pl_bmassprov", "pl_dens", "pl_eqt", "pl_insol",
+    "pl_orbeccen", "st_teff", "st_rad", "st_mass", "st_lum",
+    "pl_controv_flag", *team.LIMIT_FLAGS.values(),
 )
 
 NUMBER_FIELDS = {
-    "radius_earth": "Радиус (радиусы Земли)",
-    "mass_earth": "Масса (массы Земли)",
-    "temperature_k": "Равновесная температура (K)",
-    "insolation": "Поток излучения (потоки Земли)",
-    "distance_pc": "Расстояние до системы (пк)",
-    "semi_major_axis_au": "Большая полуось орбиты (а.е.)",
-    "star_temperature_k": "Температура звезды (K)",
+    "score": "priority_score",
+    "radius_earth": "pl_rade",
+    "mass_earth": "pl_bmasse",
+    "temperature_k": "pl_eqt",
+    "insolation": "insolation_flux",
+    "distance_pc": "sy_dist",
+    "semi_major_axis_au": "pl_orbsmax",
+    "star_temperature_k": "st_teff",
+    "density_g_cm3": "density_final",
+    "data_coverage_pct": "data_coverage_pct",
+    "earth_similarity_percent": "earth_similarity_percent",
 }
 
 
-def read_ranking(rows):
-    items = []
-    for row in rows:
-        item = {
-            "rank": int(row["Место в рейтинге"]),
-            "name": row["Название планеты"],
-            "hostname": row["Родительская звезда"] or None,
-            "score": float(row["Итоговый рейтинг"]),
-            "zone": row["Положение относительно HZ"],
-            "quality": row["Полнота данных"],
-            "category": row["Категория кандидата"],
-            "mass_source": row["Источник массы"],
-            "mass_provenance": row["Происхождение оценки массы"] or None,
-            "missing_data": row["Недостающие данные"],
-            "human_habitability": row["Пригодность для человека"],
-            **{name: float(row[column]) if row[column] else None for name, column in NUMBER_FIELDS.items()},
-        }
-        item["density_g_cm3"] = density_from_mass(item["mass_earth"], item["radius_earth"])
-        items.append(item)
-    if [item["rank"] for item in items] != list(range(1, 51)):
-        raise ValueError("Expected 50 ranked candidates")
-    return items
+def number_or_none(value):
+    value = team.num(value)
+    return float(value) if math.isfinite(value) else None
 
 
 @lru_cache(maxsize=1)
 def seed_ranking():
-    path = Path(__file__).with_name("ranking_seed.csv")
-    with path.open(encoding="utf-8-sig", newline="") as stream:
-        return read_ranking(csv.DictReader(stream))
+    path = Path(__file__).with_name("ranking_seed.json")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def calculate_ranking(source_rows):
-    import pandas as pd
-
-    from . import team_scoring as team
-
     data = team.prepare_data(pd.DataFrame(source_rows).replace("", None))
-    data = team.impute_mass_and_density(data)
     top = team.select_top50(team.process_planets(data))
-    output = team.prepare_output(top)
-    return read_ranking(csv.DictReader(StringIO(output.to_csv(index=False))))
+    items = []
+    for row in top.to_dict("records"):
+        items.append({
+            "rank": int(row["rank"]),
+            "name": row["pl_name"],
+            "hostname": row.get("hostname") or None,
+            "zone": row["hz_status"],
+            "optimistic_zone": row["optimistic_hz_status"],
+            "quality": row["confidence"],
+            "category": row["esi_class"],
+            "mass_source": "NASA" if number_or_none(row["pl_bmasse"]) is not None else "Нет данных",
+            "mass_provenance": row["mass_provenance"] or None,
+            "missing_data": row["missing_data"],
+            "human_habitability": row["human_habitability_status"],
+            **{name: number_or_none(row.get(column)) for name, column in NUMBER_FIELDS.items()},
+        })
+    return items

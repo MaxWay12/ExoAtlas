@@ -29,6 +29,9 @@ export interface RankedPlanet {
   hostname: string | null
   score: number
   zone: string
+  optimistic_zone?: string
+  data_coverage_pct?: number | null
+  earth_similarity_percent?: number | null
   quality: string
   category: string
   radius_earth: number | null

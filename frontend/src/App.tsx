@@ -78,7 +78,8 @@ export default function App() {
               </>
             )}
             {!planets.length && <p className="scene-status" role="status">
-              {ranking.error ? 'Не удалось загрузить рейтинг. ' + ranking.error : 'Загрузка рейтинга…'}
+              {ranking.error ? 'Не удалось загрузить рейтинг. ' + ranking.error
+                : ranking.data ? 'Каталог не содержит кандидатов по текущим критериям.' : 'Загрузка рейтинга…'}
             </p>}
             {open && current && (
               <div className="popup" role="dialog" aria-label={current.name}>

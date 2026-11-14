@@ -1,6 +1,16 @@
+<p align="center">
+  <a href="https://exoatlas.ru/">
+    <img src="docs/assets/exoatlas-readme.png" width="720" alt="ExoAtlas — QR-код для перехода на exoatlas.ru" />
+  </a>
+</p>
+
+<p align="center">
+  <strong><a href="https://exoatlas.ru/">Открыть сайт ExoAtlas ↗</a></strong>
+</p>
+
 # ExoAtlas
 
-ExoAtlas — интерактивный каталог экзопланет и рейтинг кандидатов по индексу жизнепригодности. Проект команды **JPEG** для **TulaHack-2026**. [Открыть ExoAtlas](https://exoatlas.ru/)
+ExoAtlas — интерактивный каталог экзопланет и рейтинг кандидатов по индексу жизнепригодности. Проект команды **JPEG** для **TulaHack-2026**.
 
 | Раздел | Возможности |
 | --- | --- |

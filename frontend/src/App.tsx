@@ -61,6 +61,7 @@ export default function App() {
             <header className="scene-heading">
               <h2 id="scene-title">Топ-5 по индексу жизнепригодности</h2>
               <p>Планеты из разных систем. Размеры и движение на схеме условные.</p>
+              <a className="ranking-link" href="#top">Смотреть топ-50</a>
             </header>
             {planets.length > 0 && (
               <>

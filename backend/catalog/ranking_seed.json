@@ -7,6 +7,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 91.40113986771766,
+        "contribution": 31.990398953701185
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": 99.17736699573655,
+        "contribution": 14.876605049360483
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.04296106428976221,
+      "hz_outer_au": 0.0856455385437999,
+      "optimistic_hz_inner_au": 0.03391788270923277,
+      "optimistic_hz_outer_au": 0.09033808909342463,
+      "hz_inner_flux": 0.9210854807438139,
+      "hz_outer_flux": 0.23176108258490363,
+      "optimistic_hz_inner_flux": 1.477721295349756,
+      "optimistic_hz_outer_flux": 0.20830907981676636,
+      "orbit_periastron_au": 0.05184,
+      "orbit_apastron_au": 0.05616
+    },
     "mass_source": "NASA",
     "mass_provenance": "Mass",
     "missing_data": "Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -31,6 +63,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 99.8400692307415,
+        "contribution": 34.94402423075953
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.04051208215030161,
+      "hz_outer_au": 0.08095627500081187,
+      "optimistic_hz_inner_au": 0.031984480927693106,
+      "optimistic_hz_outer_au": 0.08539207775439878,
+      "hz_inner_flux": 0.92004881577984,
+      "hz_outer_flux": 0.23039813857279998,
+      "optimistic_hz_inner_flux": 1.47605107703808,
+      "optimistic_hz_outer_flux": 0.20708318606950402,
+      "orbit_periastron_au": 0.04848,
+      "orbit_apastron_au": 0.04848
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -55,6 +119,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 99.8400692307415,
+        "contribution": 34.94402423075953
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.027974483813358642,
+      "hz_outer_au": 0.05556290358355334,
+      "optimistic_hz_inner_au": 0.022085857886042032,
+      "optimistic_hz_outer_au": 0.05860703714663665,
+      "hz_inner_flux": 0.9226050696584677,
+      "hz_outer_flux": 0.23386764063729026,
+      "optimistic_hz_inner_flux": 1.4801695080187651,
+      "optimistic_hz_outer_flux": 0.21020375375723513,
+      "orbit_periastron_au": 0.04368,
+      "orbit_apastron_au": 0.04732
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -79,6 +175,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 99.64401359247937,
+        "contribution": 34.875404757367775
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.03904186185808411,
+      "hz_outer_au": 0.07758061627686168,
+      "optimistic_hz_inner_au": 0.030823566875133355,
+      "optimistic_hz_outer_au": 0.0818310676731048,
+      "hz_inner_flux": 0.9224205273477195,
+      "hz_outer_flux": 0.23360576145130046,
+      "optimistic_hz_inner_flux": 1.4798722042038843,
+      "optimistic_hz_outer_flux": 0.20996821918729597,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -103,6 +231,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 97.61143693078952,
+        "contribution": 34.16400292577633
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.05641969242139868,
+      "hz_outer_au": 0.11141474654636592,
+      "optimistic_hz_inner_au": 0.04454313486403709,
+      "optimistic_hz_outer_au": 0.1175183370494648,
+      "hz_inner_flux": 0.9248654833492004,
+      "hz_outer_flux": 0.23716721112140227,
+      "optimistic_hz_inner_flux": 1.4838105094636869,
+      "optimistic_hz_outer_flux": 0.2131712959114092,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -127,6 +287,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 96.36012847149138,
+        "contribution": 33.726044965021984
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.03904186185808411,
+      "hz_outer_au": 0.07758061627686168,
+      "optimistic_hz_inner_au": 0.030823566875133355,
+      "optimistic_hz_outer_au": 0.0818310676731048,
+      "hz_inner_flux": 0.9224205273477195,
+      "hz_outer_flux": 0.23360576145130046,
+      "optimistic_hz_inner_flux": 1.4798722042038843,
+      "optimistic_hz_outer_flux": 0.20996821918729597,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -151,6 +343,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 73.00737525538803,
+        "contribution": 25.55258133938581
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.09568971421788432,
+      "hz_outer_au": 0.1873240891585798,
+      "optimistic_hz_inner_au": 0.07554619714025262,
+      "optimistic_hz_outer_au": 0.19758508151383214,
+      "hz_inner_flux": 0.92830242490624,
+      "hz_outer_flux": 0.24223268375679996,
+      "optimistic_hz_inner_flux": 1.48934319276288,
+      "optimistic_hz_outer_flux": 0.217726704447744,
+      "orbit_periastron_au": 0.09673,
+      "orbit_apastron_au": 0.09673
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -175,6 +399,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 97.87334504856,
+        "contribution": 34.255670766996
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": 95.6564961981876,
+        "contribution": 14.348474429728139
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.08856781058875571,
+      "hz_outer_au": 0.17348299529187755,
+      "optimistic_hz_inner_au": 0.06992354256314313,
+      "optimistic_hz_outer_au": 0.182985881658081,
+      "hz_inner_flux": 0.9280645460226327,
+      "hz_outer_flux": 0.24188903179974208,
+      "optimistic_hz_inner_flux": 1.4889604221286354,
+      "optimistic_hz_outer_flux": 0.21741766850905675,
+      "orbit_periastron_au": 0.05092000000000001,
+      "orbit_apastron_au": 0.08308
+    },
     "mass_source": "NASA",
     "mass_provenance": "Mass",
     "missing_data": "Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -199,6 +455,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 62.99617423783786,
+        "contribution": 22.048660983243252
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.17662508020067524,
+      "hz_outer_au": 0.3382460809847442,
+      "optimistic_hz_inner_au": 0.13944249844088744,
+      "optimistic_hz_outer_au": 0.35677031524812813,
+      "hz_inner_flux": 0.9394966933204657,
+      "hz_outer_flux": 0.25617364817662525,
+      "optimistic_hz_inner_flux": 1.507334671484391,
+      "optimistic_hz_outer_flux": 0.23026216077009892,
+      "orbit_periastron_au": 0.3006,
+      "orbit_apastron_au": 0.3006
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -223,6 +511,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "Нет надёжных данных",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 61.76381000461336,
+        "contribution": 21.617333501614677
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.4561336198407485,
+      "hz_outer_au": 0.8279640736835608,
+      "optimistic_hz_inner_au": 0.36011043618460226,
+      "optimistic_hz_outer_au": 0.8732974411532727,
+      "hz_inner_flux": 1.008824992453243,
+      "hz_outer_flux": 0.30618013816277656,
+      "optimistic_hz_inner_flux": 1.6185591853507142,
+      "optimistic_hz_outer_flux": 0.2752172333391318,
+      "orbit_periastron_au": 0.718,
+      "orbit_apastron_au": 0.718
+    },
     "mass_source": "Нет данных",
     "mass_provenance": "Mass",
     "missing_data": "Опубликованная масса планеты; Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -247,6 +567,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 88.3813513516294,
+        "contribution": 30.933472973070295
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": 99.08854884359451,
+        "contribution": 14.863282326539176
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.04296106428976221,
+      "hz_outer_au": 0.0856455385437999,
+      "optimistic_hz_inner_au": 0.03391788270923277,
+      "optimistic_hz_outer_au": 0.09033808909342463,
+      "hz_inner_flux": 0.9210854807438139,
+      "hz_outer_flux": 0.23176108258490363,
+      "optimistic_hz_inner_flux": 1.477721295349756,
+      "optimistic_hz_outer_flux": 0.20830907981676636,
+      "orbit_periastron_au": 0.033516,
+      "orbit_apastron_au": 0.034884000000000005
+    },
     "mass_source": "NASA",
     "mass_provenance": "Mass",
     "missing_data": "Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -271,6 +623,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 29.33837530180502,
+        "contribution": 10.268431355631755
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": 99.08854884359451,
+        "contribution": 14.863282326539176
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.06413801794809225,
+      "hz_outer_au": 0.1270253346254189,
+      "optimistic_hz_inner_au": 0.05063684456774569,
+      "optimistic_hz_outer_au": 0.13398439592279623,
+      "hz_inner_flux": 0.9237382566893028,
+      "hz_outer_flux": 0.23550455134447165,
+      "optimistic_hz_inner_flux": 1.4819949725640047,
+      "optimistic_hz_outer_flux": 0.2116759682007324,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "Mass",
     "missing_data": "Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -295,6 +679,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 81.04721536671069,
+        "contribution": 28.366525378348744
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": 94.62966473106327,
+        "contribution": 14.19444970965949
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.2438979045416202,
+      "hz_outer_au": 0.4657461281786532,
+      "optimistic_hz_inner_au": 0.1925530834753995,
+      "optimistic_hz_outer_au": 0.4912524501375919,
+      "hz_inner_flux": 0.941399280092021,
+      "hz_outer_flux": 0.2581615105569656,
+      "optimistic_hz_inner_flux": 1.5103898021757662,
+      "optimistic_hz_outer_flux": 0.2320494487754879,
+      "orbit_periastron_au": 0.16010639999999998,
+      "orbit_apastron_au": 0.2004936
+    },
     "mass_source": "NASA",
     "mass_provenance": "Mass",
     "missing_data": "Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -319,6 +735,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 70.49599419574885,
+        "contribution": 24.673597968512098
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.3475448805813902,
+      "hz_outer_au": 0.645651426644065,
+      "optimistic_hz_inner_au": 0.27437976687016746,
+      "optimistic_hz_outer_au": 0.6810049933581844,
+      "hz_inner_flux": 0.9682292729386405,
+      "hz_outer_flux": 0.2805457991457542,
+      "optimistic_hz_inner_flux": 1.5534448314850628,
+      "optimistic_hz_outer_flux": 0.25217347744963003,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -343,6 +791,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 99.03308048186726,
+        "contribution": 34.66157816865354
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.027974483813358642,
+      "hz_outer_au": 0.05556290358355334,
+      "optimistic_hz_inner_au": 0.022085857886042032,
+      "optimistic_hz_outer_au": 0.05860703714663665,
+      "hz_inner_flux": 0.9226050696584677,
+      "hz_outer_flux": 0.23386764063729026,
+      "optimistic_hz_inner_flux": 1.4801695080187651,
+      "optimistic_hz_outer_flux": 0.21020375375723513,
+      "orbit_periastron_au": 0.025123,
+      "orbit_apastron_au": 0.026677
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -367,6 +847,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 98.62373560237148,
+        "contribution": 34.518307460830016
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.07463304891597228,
+      "hz_outer_au": 0.1468086784741963,
+      "optimistic_hz_inner_au": 0.05892233718465971,
+      "optimistic_hz_outer_au": 0.15485083328297952,
+      "hz_inner_flux": 0.9263767194286399,
+      "hz_outer_flux": 0.2394123454948,
+      "optimistic_hz_inner_flux": 1.4862438479716802,
+      "optimistic_hz_outer_flux": 0.215190406799184,
+      "orbit_periastron_au": 0.0649,
+      "orbit_apastron_au": 0.0649
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -391,6 +903,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 97.12973704740736,
+        "contribution": 33.99540796659257
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.1582167166181132,
+      "hz_outer_au": 0.3079322691308871,
+      "optimistic_hz_inner_au": 0.12491028723900123,
+      "optimistic_hz_outer_au": 0.3247987234244378,
+      "hz_inner_flux": 0.9307976213829879,
+      "hz_outer_flux": 0.2457251424037358,
+      "optimistic_hz_inner_flux": 1.493356807066116,
+      "optimistic_hz_outer_flux": 0.22086727485706423,
+      "orbit_periastron_au": 0.1257176,
+      "orbit_apastron_au": 0.14148239999999998
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -415,6 +959,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "Нет надёжных данных",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 67.1058179996844,
+        "contribution": 23.487036299889542
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.03959732322977953,
+      "hz_outer_au": 0.0793045282687389,
+      "optimistic_hz_inner_au": 0.031262347750275615,
+      "optimistic_hz_outer_au": 0.08364999903656326,
+      "hz_inner_flux": 0.9190271521886899,
+      "hz_outer_flux": 0.22912054187042494,
+      "optimistic_hz_inner_flux": 1.47440508693303,
+      "optimistic_hz_outer_flux": 0.205934030454189,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "Нет данных",
     "mass_provenance": "Mass",
     "missing_data": "Опубликованная масса планеты; Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -439,6 +1015,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 40.59007621060834,
+        "contribution": 14.206526673712917
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.1568746499975012,
+      "hz_outer_au": 0.30262350782236996,
+      "optimistic_hz_inner_au": 0.12385020576275577,
+      "optimistic_hz_outer_au": 0.3191978138597806,
+      "hz_inner_flux": 0.9351783848603837,
+      "hz_outer_flux": 0.25130126684234944,
+      "optimistic_hz_inner_flux": 1.5003982021810551,
+      "optimistic_hz_outer_flux": 0.22588125055048403,
+      "orbit_periastron_au": 0.1654,
+      "orbit_apastron_au": 0.1654
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -463,6 +1071,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 89.42083776899395,
+        "contribution": 31.297293219147882
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.14451948212688484,
+      "hz_outer_au": 0.268863184843629,
+      "optimistic_hz_inner_au": 0.114095243830046,
+      "optimistic_hz_outer_au": 0.28358525463653794,
+      "hz_inner_flux": 0.9663783832237834,
+      "hz_outer_flux": 0.27921408489422844,
+      "optimistic_hz_inner_flux": 1.5504755367613563,
+      "optimistic_hz_outer_flux": 0.2509762980911776,
+      "orbit_periastron_au": 0.13693,
+      "orbit_apastron_au": 0.13693
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -487,6 +1127,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 60.0,
+        "contribution": 30.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 92.78971798694559,
+        "contribution": 32.476401295430954
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.1582167166181132,
+      "hz_outer_au": 0.3079322691308871,
+      "optimistic_hz_inner_au": 0.12491028723900123,
+      "optimistic_hz_outer_au": 0.3247987234244378,
+      "hz_inner_flux": 0.9307976213829879,
+      "hz_outer_flux": 0.2457251424037358,
+      "optimistic_hz_inner_flux": 1.493356807066116,
+      "optimistic_hz_outer_flux": 0.22086727485706423,
+      "orbit_periastron_au": 0.15730360000000002,
+      "orbit_apastron_au": 0.1710964
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -511,6 +1183,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 26.429635315643303,
+        "contribution": 9.250372360475156
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.12150901503623165,
+      "hz_outer_au": 0.23775301858260584,
+      "optimistic_hz_inner_au": 0.0959302807594094,
+      "optimistic_hz_outer_au": 0.25077626888704657,
+      "hz_inner_flux": 0.9285023325726899,
+      "hz_outer_flux": 0.24252020175042496,
+      "optimistic_hz_inner_flux": 1.48966484534103,
+      "optimistic_hz_outer_flux": 0.21798525948458902,
+      "orbit_periastron_au": 0.1225,
+      "orbit_apastron_au": 0.1275
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Равновесная температура; Радиус звезды; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -535,6 +1239,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 25.741303227333095,
+        "contribution": 9.009456129566583
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.49643568305238067,
+      "hz_outer_au": 0.9025670172603322,
+      "optimistic_hz_inner_au": 0.3919280383554089,
+      "optimistic_hz_outer_au": 0.951985264265718,
+      "hz_inner_flux": 1.005249855230355,
+      "hz_outer_flux": 0.3041172692054214,
+      "optimistic_hz_inner_flux": 1.6128253180719736,
+      "optimistic_hz_outer_flux": 0.27336288420016597,
+      "orbit_periastron_au": 0.54465,
+      "orbit_apastron_au": 0.54465
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -559,6 +1295,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 24.410027443942653,
+        "contribution": 8.543509605379928
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.129214405673233,
+      "hz_outer_au": 0.25292814679954334,
+      "optimistic_hz_inner_au": 0.10201364310243655,
+      "optimistic_hz_outer_au": 0.2667826965846699,
+      "hz_inner_flux": 0.928342282241551,
+      "hz_outer_flux": 0.24229010384484864,
+      "optimistic_hz_inner_flux": 1.4894073247968873,
+      "optimistic_hz_outer_flux": 0.217778340451514,
+      "orbit_periastron_au": 0.196,
+      "orbit_apastron_au": 0.196
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -583,6 +1351,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 45.65995601950902,
+        "contribution": 15.980984606828155
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.07291559326958266,
+      "hz_outer_au": 0.14455051737814592,
+      "optimistic_hz_inner_au": 0.05756677196036711,
+      "optimistic_hz_outer_au": 0.1524698050473263,
+      "hz_inner_flux": 0.9233559934919432,
+      "hz_outer_flux": 0.2349474301655265,
+      "optimistic_hz_inner_flux": 1.4813792107426145,
+      "optimistic_hz_outer_flux": 0.21117490622860183,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -607,6 +1407,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 95.65204469734225,
+        "contribution": 33.478215644069785
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.06254170834446293,
+      "hz_outer_au": 0.12330571497091158,
+      "optimistic_hz_inner_au": 0.04937638154690241,
+      "optimistic_hz_outer_au": 0.1300605791038804,
+      "hz_inner_flux": 0.9254874205838819,
+      "hz_outer_flux": 0.23809133411003963,
+      "optimistic_hz_inner_flux": 1.4848120361135468,
+      "optimistic_hz_outer_flux": 0.21400239471760152,
+      "orbit_periastron_au": 0.0438464,
+      "orbit_apastron_au": 0.0553536
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -631,6 +1463,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 23.137985840235874,
+        "contribution": 8.098295044082557
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.3282660632247035,
+      "hz_outer_au": 0.611315442150465,
+      "optimistic_hz_inner_au": 0.25915948475575973,
+      "optimistic_hz_outer_au": 0.6447892136774823,
+      "hz_inner_flux": 0.965112690479802,
+      "hz_outer_flux": 0.2782910677686548,
+      "optimistic_hz_inner_flux": 1.5484450010082058,
+      "optimistic_hz_outer_flux": 0.25014652403535526,
+      "orbit_periastron_au": 0.341,
+      "orbit_apastron_au": 0.341
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -655,6 +1519,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Низкое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 100.0,
+        "contribution": 50.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 17.125139252332456,
+        "contribution": 5.99379873831636
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.04656216066701855,
+      "hz_outer_au": 0.09250728550170999,
+      "optimistic_hz_inner_au": 0.0367608398933296,
+      "optimistic_hz_outer_au": 0.0975755181288748,
+      "hz_inner_flux": 0.9224944241902551,
+      "hz_outer_flux": 0.23371044656939,
+      "optimistic_hz_inner_flux": 1.4799912550772243,
+      "optimistic_hz_outer_flux": 0.2100623732908622,
+      "orbit_periastron_au": 0.0736,
+      "orbit_apastron_au": 0.0864
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -679,6 +1575,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Низкое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 60.0,
+        "contribution": 30.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 73.00737525538803,
+        "contribution": 25.55258133938581
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.054030182476371175,
+      "hz_outer_au": 0.10669103093293832,
+      "optimistic_hz_inner_au": 0.042656624158642194,
+      "optimistic_hz_outer_au": 0.11253584024166781,
+      "hz_inner_flux": 0.9248837124563788,
+      "hz_outer_flux": 0.23719426089117682,
+      "optimistic_hz_inner_flux": 1.4838398663713959,
+      "optimistic_hz_outer_flux": 0.21319562298865774,
+      "orbit_periastron_au": 0.104912,
+      "orbit_apastron_au": 0.147888
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -703,6 +1631,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 35.04893967397227,
+        "contribution": 12.267128885890294
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.0993049295798269,
+      "hz_outer_au": 0.19403291214777404,
+      "optimistic_hz_inner_au": 0.07840028468592551,
+      "optimistic_hz_outer_au": 0.20466116652568503,
+      "hz_inner_flux": 0.9290912809360085,
+      "hz_outer_flux": 0.2433599997742454,
+      "optimistic_hz_inner_flux": 1.490612368873266,
+      "optimistic_hz_outer_flux": 0.21874045423324692,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -727,6 +1687,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 76.74638390849807,
+        "contribution": 26.861234367974326
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.1252258989105953,
+      "hz_outer_au": 0.24490105819052183,
+      "optimistic_hz_inner_au": 0.09886469552240018,
+      "optimistic_hz_outer_au": 0.2583157757218629,
+      "hz_inner_flux": 0.9287133410071424,
+      "hz_outer_flux": 0.24282236052802306,
+      "optimistic_hz_inner_flux": 1.4900043407901564,
+      "optimistic_hz_outer_flux": 0.21825697920444873,
+      "orbit_periastron_au": 0.09434,
+      "orbit_apastron_au": 0.11766
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -751,6 +1743,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 53.40132176827412,
+        "contribution": 18.690462618895943
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.11454473325721219,
+      "hz_outer_au": 0.22341679155111077,
+      "optimistic_hz_inner_au": 0.09043186735098091,
+      "optimistic_hz_outer_au": 0.2356543314933935,
+      "hz_inner_flux": 0.9298432646003931,
+      "hz_outer_flux": 0.2444152944061515,
+      "optimistic_hz_inner_flux": 1.4918219827607644,
+      "optimistic_hz_outer_flux": 0.2196894220744468,
+      "orbit_periastron_au": 0.1005712,
+      "orbit_apastron_au": 0.1098288
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -775,6 +1799,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 24.410027443942653,
+        "contribution": 8.543509605379928
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.18178249340366437,
+      "hz_outer_au": 0.34889026252353605,
+      "optimistic_hz_inner_au": 0.14351429495107504,
+      "optimistic_hz_outer_au": 0.3679977492592664,
+      "hz_inner_flux": 0.93811458449664,
+      "hz_outer_flux": 0.25467264740479995,
+      "optimistic_hz_inner_flux": 1.5051149740876801,
+      "optimistic_hz_outer_flux": 0.228912587849984,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -799,6 +1855,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 55.0,
+        "contribution": 27.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 28.58755074259364,
+        "contribution": 10.005642759907774
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": 76.96461216109537,
+        "contribution": 11.544691824164307
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.16784155959751296,
+      "hz_outer_au": 0.32498997755331904,
+      "optimistic_hz_inner_au": 0.13250864025151937,
+      "optimistic_hz_outer_au": 0.3427898547727744,
+      "hz_inner_flux": 0.9332349335521384,
+      "hz_outer_flux": 0.24891442433703298,
+      "optimistic_hz_inner_flux": 1.4972751098572386,
+      "optimistic_hz_outer_flux": 0.2237350781127358,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "Mass",
     "missing_data": "Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -823,6 +1911,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 18.608785608920815,
+        "contribution": 6.5130749631222855
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.11249950141260232,
+      "hz_outer_au": 0.22022057837116663,
+      "optimistic_hz_inner_au": 0.08881737515746835,
+      "optimistic_hz_outer_au": 0.23228352465332522,
+      "hz_inner_flux": 0.928322345906143,
+      "hz_outer_flux": 0.2422613886015306,
+      "optimistic_hz_inner_flux": 1.4893752465265804,
+      "optimistic_hz_outer_flux": 0.21775251777999605,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -847,6 +1967,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 60.0,
+        "contribution": 30.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 49.99728475384509,
+        "contribution": 17.49904966384578
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.09731871729535273,
+      "hz_outer_au": 0.1901242157926744,
+      "optimistic_hz_inner_au": 0.07683218234602122,
+      "optimistic_hz_outer_au": 0.20053835261249978,
+      "hz_inner_flux": 0.9291530306827658,
+      "hz_outer_flux": 0.24344739320282308,
+      "optimistic_hz_inner_flux": 1.49071170596196,
+      "optimistic_hz_outer_flux": 0.21881904286982048,
+      "orbit_periastron_au": 0.0819909,
+      "orbit_apastron_au": 0.10021110000000001
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -871,6 +2023,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "Нет надёжных данных",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 39.62499117484393,
+        "contribution": 13.868746911195373
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.4561336198407485,
+      "hz_outer_au": 0.8279640736835608,
+      "optimistic_hz_inner_au": 0.36011043618460226,
+      "optimistic_hz_outer_au": 0.8732974411532727,
+      "hz_inner_flux": 1.008824992453243,
+      "hz_outer_flux": 0.30618013816277656,
+      "optimistic_hz_inner_flux": 1.6185591853507142,
+      "optimistic_hz_outer_flux": 0.2752172333391318,
+      "orbit_periastron_au": 0.427,
+      "orbit_apastron_au": 0.427
+    },
     "mass_source": "Нет данных",
     "mass_provenance": "Mass",
     "missing_data": "Опубликованная масса планеты; Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -895,6 +2079,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "Нет надёжных данных",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 85.0,
+        "contribution": 42.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 10.573487428009251,
+        "contribution": 3.7007205998032378
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.7718814442129834,
+      "hz_outer_au": 1.3681868672371988,
+      "optimistic_hz_inner_au": 0.6093976458668009,
+      "optimistic_hz_outer_au": 1.443096855335432,
+      "hz_inner_flux": 1.0830756661515428,
+      "hz_outer_flux": 0.34472213041927163,
+      "optimistic_hz_inner_flux": 1.7376345996028846,
+      "optimistic_hz_outer_flux": 0.3098625134752764,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "Нет данных",
     "mass_provenance": "Mass",
     "missing_data": "Опубликованная масса планеты; Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -919,6 +2135,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 55.97190174985756,
+        "contribution": 19.590165612450146
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.2496945905592977,
+      "hz_outer_au": 0.4767438604489012,
+      "optimistic_hz_inner_au": 0.1971294562422325,
+      "optimistic_hz_outer_au": 0.5028524396217783,
+      "hz_inner_flux": 0.9415030524953559,
+      "hz_outer_flux": 0.25826751404843,
+      "optimistic_hz_inner_flux": 1.510556423674626,
+      "optimistic_hz_outer_flux": 0.23214475565954823,
+      "orbit_periastron_au": 0.1830726,
+      "orbit_apastron_au": 0.2197274
+    },
     "mass_source": "Нет данных",
     "mass_provenance": "Mass",
     "missing_data": "Опубликованная масса планеты; Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -943,6 +2191,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 55.0,
+        "contribution": 27.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 47.79858887006435,
+        "contribution": 16.72950610452252
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.18178249340366437,
+      "hz_outer_au": 0.34889026252353605,
+      "optimistic_hz_inner_au": 0.14351429495107504,
+      "optimistic_hz_outer_au": 0.3679977492592664,
+      "hz_inner_flux": 0.93811458449664,
+      "hz_outer_flux": 0.25467264740479995,
+      "optimistic_hz_inner_flux": 1.5051149740876801,
+      "optimistic_hz_outer_flux": 0.228912587849984,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -967,6 +2247,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 25.741303227333095,
+        "contribution": 9.009456129566583
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.27027434034396014,
+      "hz_outer_au": 0.5097019280392189,
+      "optimistic_hz_inner_au": 0.21337627796096173,
+      "optimistic_hz_outer_au": 0.5376133120035637,
+      "hz_inner_flux": 0.9514596339831972,
+      "hz_outer_flux": 0.26752689389114365,
+      "optimistic_hz_inner_flux": 1.5265383863806896,
+      "optimistic_hz_outer_flux": 0.24046948443080662,
+      "orbit_periastron_au": 0.2543,
+      "orbit_apastron_au": 0.2543
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -991,6 +2303,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 20.20622901198756,
+        "contribution": 7.072180154195646
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.8370416069718245,
+      "hz_outer_au": 1.478836540779574,
+      "optimistic_hz_inner_au": 0.6608433823031201,
+      "optimistic_hz_outer_au": 1.5598046124180194,
+      "hz_inner_flux": 1.09775622328069,
+      "hz_outer_flux": 0.35168970372842506,
+      "optimistic_hz_inner_flux": 1.7611766114010299,
+      "optimistic_hz_outer_flux": 0.316125551150589,
+      "orbit_periastron_au": 0.745,
+      "orbit_apastron_au": 0.745
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1015,6 +2359,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Низкое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "Нет надёжных данных",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 60.0,
+        "contribution": 30.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 26.429635315643303,
+        "contribution": 9.250372360475156
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.17552711045224448,
+      "hz_outer_au": 0.34108476866113385,
+      "optimistic_hz_inner_au": 0.13857652688175698,
+      "optimistic_hz_outer_au": 0.35976679911674664,
+      "hz_inner_flux": 0.9315187329537213,
+      "hz_outer_flux": 0.2466921600291486,
+      "optimistic_hz_inner_flux": 1.4945162964507415,
+      "optimistic_hz_outer_flux": 0.2217368305502451,
+      "orbit_periastron_au": 0.09541,
+      "orbit_apastron_au": 0.17719000000000001
+    },
     "mass_source": "Нет данных",
     "mass_provenance": "Mass",
     "missing_data": "Опубликованная масса планеты; Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1039,6 +2415,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 60.0,
+        "contribution": 30.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 22.52367482584855,
+        "contribution": 7.883286189046991
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.06234728830912544,
+      "hz_outer_au": 0.12362248040705504,
+      "optimistic_hz_inner_au": 0.04922311601281594,
+      "optimistic_hz_outer_au": 0.1303952313474475,
+      "hz_inner_flux": 0.9232830472143736,
+      "hz_outer_flux": 0.23484163407512526,
+      "optimistic_hz_inner_flux": 1.4812617026674801,
+      "optimistic_hz_outer_flux": 0.21107975507996374,
+      "orbit_periastron_au": 0.0359522,
+      "orbit_apastron_au": 0.07136780000000001
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1063,6 +2471,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 35.93080943246042,
+        "contribution": 12.575783301361149
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.07927099545715587,
+      "hz_outer_au": 0.15601382508747974,
+      "optimistic_hz_inner_au": 0.06258399168787039,
+      "optimistic_hz_outer_au": 0.16456029277965054,
+      "hz_inner_flux": 0.9261714217075947,
+      "hz_outer_flux": 0.2391078477437234,
+      "optimistic_hz_inner_flux": 1.4859133373505227,
+      "optimistic_hz_outer_flux": 0.2149165682745208,
+      "orbit_periastron_au": 0.048637,
+      "orbit_apastron_au": 0.065803
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1087,6 +2527,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 13.678355814090617,
+        "contribution": 4.7874245349317155
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.06664425459618448,
+      "hz_outer_au": 0.13197046777998891,
+      "optimistic_hz_inner_au": 0.05261550746140884,
+      "optimistic_hz_outer_au": 0.1392004328510302,
+      "hz_inner_flux": 0.9237927942773113,
+      "hz_outer_flux": 0.23558437775705302,
+      "optimistic_hz_inner_flux": 1.4820828205060244,
+      "optimistic_hz_outer_flux": 0.2117477618210611,
+      "orbit_periastron_au": 0.06191,
+      "orbit_apastron_au": 0.06191
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1111,6 +2583,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Высокое сходство по выбранным параметрам",
+    "radius_source": "Оценка NASA (расчёт)",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 35.04893967397227,
+        "contribution": 12.267128885890294
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.10482042937534469,
+      "hz_outer_au": 0.2051786471524232,
+      "optimistic_hz_inner_au": 0.08275481217769255,
+      "optimistic_hz_outer_au": 0.21641764058904966,
+      "hz_inner_flux": 0.928342282241551,
+      "hz_outer_flux": 0.24229010384484864,
+      "optimistic_hz_inner_flux": 1.4894073247968873,
+      "optimistic_hz_outer_flux": 0.217778340451514,
+      "orbit_periastron_au": 0.07921,
+      "orbit_apastron_au": 0.09879
+    },
     "mass_source": "NASA",
     "mass_provenance": "Msini",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1135,6 +2639,38 @@
     "optimistic_zone": "Вся орбита в оптимистической HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 65.0,
+        "contribution": 32.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 11.526536706686283,
+        "contribution": 4.034287847340199
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.7970790022836853,
+      "hz_outer_au": 1.4205477450031423,
+      "optimistic_hz_inner_au": 0.6292882136014455,
+      "optimistic_hz_outer_au": 1.4983248381532404,
+      "hz_inner_flux": 1.0616888661442558,
+      "hz_outer_flux": 0.3342630178839015,
+      "optimistic_hz_inner_flux": 1.703337880488095,
+      "optimistic_hz_outer_flux": 0.300460954104228,
+      "orbit_periastron_au": 0.6421,
+      "orbit_apastron_au": 0.6421
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1159,6 +2695,38 @@
     "optimistic_zone": "Орбита пересекает оптимистическую HZ",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 50.0,
+        "contribution": 25.0
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 30.888183817597543,
+        "contribution": 10.81086433615914
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.857235816096808,
+      "hz_outer_au": 1.517609007671318,
+      "optimistic_hz_inner_au": 0.6767853737534641,
+      "optimistic_hz_outer_au": 1.600699996671576,
+      "hz_inner_flux": 1.0884271942774078,
+      "hz_outer_flux": 0.3472803485948295,
+      "optimistic_hz_inner_flux": 1.746216433916543,
+      "optimistic_hz_outer_flux": 0.3121620556130184,
+      "orbit_periastron_au": 0.5504,
+      "orbit_apastron_au": 0.7296000000000001
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",
@@ -1183,6 +2751,38 @@
     "optimistic_zone": "В оптимистической HZ по круговому приближению",
     "quality": "Высокая полнота",
     "category": "Умеренное сходство по выбранным параметрам",
+    "radius_source": "NASA, из публикации",
+    "density_source": "NASA: pl_dens; без Mass исключена из рейтинга",
+    "insolation_source": "NASA: pl_insol",
+    "score_breakdown": {
+      "hz_score": {
+        "weight": 50.0,
+        "score": 55.0,
+        "contribution": 27.5
+      },
+      "radius_score": {
+        "weight": 35.0,
+        "score": 20.76505454545355,
+        "contribution": 7.267769090908741
+      },
+      "density_score": {
+        "weight": 15.0,
+        "score": null,
+        "contribution": 0.0
+      }
+    },
+    "habitable_zone": {
+      "hz_inner_au": 0.28797470371644857,
+      "hz_outer_au": 0.5419590106576162,
+      "optimistic_hz_inner_au": 0.22735031735181355,
+      "optimistic_hz_outer_au": 0.5716364744879034,
+      "hz_inner_flux": 0.9534355031561379,
+      "hz_outer_flux": 0.2691950795326982,
+      "optimistic_hz_inner_flux": 1.52970917126873,
+      "optimistic_hz_outer_flux": 0.24196922629642936,
+      "orbit_periastron_au": null,
+      "orbit_apastron_au": null
+    },
     "mass_source": "NASA",
     "mass_provenance": "M-R relationship",
     "missing_data": "Плотность; Гравитация; Эксцентриситет; Состав и давление атмосферы; Наличие жидкой воды на поверхности; Температура поверхности; Радиационная обстановка у поверхности; Магнитное поле; Пригодность атмосферы для дыхания; Активность звезды и частота вспышек",

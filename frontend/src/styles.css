@@ -56,6 +56,9 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .scene-heading { top: 24px; }
 .scene-heading h2 { margin: 0; }
 .scene-heading p, .muted { color: #b6bfd6; }
+.ranking-link { display: inline-block; pointer-events: auto; padding: 7px 12px; border-radius: 8px; background: #a3a0ff; color: #11122e; font-weight: 700; text-decoration: none; }
+.ranking-link:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
+.scene-panel .scene-status { top: 155px; }
 .scene-status { top: 125px; }
 .planet-picker { position: absolute; z-index: 1; bottom: 24px; left: 24px; right: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .planet-picker button, .catalog-search button, .pagination button { padding: 8px 12px; border: 1px solid #6b7099; border-radius: 8px; background: #141932; color: var(--text); font: inherit; cursor: pointer; }
@@ -66,6 +69,10 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .rank-details dl { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
 .rank-details dd { margin: 0; overflow-wrap: anywhere; }
 .rank-details dt { color: #b6bfd6; }
+.rank-details a, .data-page .muted a { color: #b5c8ff; }
+.rank-details summary { cursor: pointer; color: #b5c8ff; }
+.score-explanation { margin-block: 12px; }
+.score-factor { display: contents; }
 .data-page { padding: clamp(16px, 4vw, 48px); }
 .data-page h2 { margin-top: 0; }
 .table-scroll { overflow-x: auto; border: 1px solid #2b3153; border-radius: 12px; }
@@ -100,7 +107,7 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 
 @media (min-width: 1120px) {
   .scene-panel { min-height: max(660px, 100vh); padding-top: 0; }
-  .dashboard-charts { position: absolute; inset: 108px 24px 84px; padding: 0; grid-template-columns: repeat(2, clamp(215px, 21%, 280px)); justify-content: space-between; pointer-events: none; }
+  .dashboard-charts { position: absolute; inset: 155px 24px 84px; padding: 0; grid-template-columns: repeat(2, clamp(215px, 21%, 280px)); justify-content: space-between; pointer-events: none; }
   .dashboard-charts .chart { pointer-events: auto; }
   .dashboard-charts .chart:first-child { align-self: start; }
   .dashboard-charts .chart:last-child { align-self: end; }

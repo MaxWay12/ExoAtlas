@@ -7,11 +7,11 @@ import pandas as pd
 
 from . import team_scoring as team
 
-RANKING_MODEL = "team_v2"
+RANKING_MODEL = "team_v2_explained"
 RANKING_COLUMNS = (
     "pl_bmasse", "pl_bmassprov", "pl_dens", "pl_eqt", "pl_insol",
     "pl_orbeccen", "st_teff", "st_rad", "st_mass", "st_lum",
-    "pl_controv_flag", *team.LIMIT_FLAGS.values(),
+    "pl_controv_flag", "pl_rade_reflink", *team.LIMIT_FLAGS.values(),
 )
 
 NUMBER_FIELDS = {
@@ -41,10 +41,25 @@ def seed_ranking():
 
 
 def calculate_ranking(source_rows):
-    data = team.prepare_data(pd.DataFrame(source_rows).replace("", None))
+    source = pd.DataFrame(source_rows).replace("", None)
+    # Keep reference markup out of the scoring pipeline and API.
+    references = dict(zip(source["pl_name"], source.pop("pl_rade_reflink"))) if "pl_rade_reflink" in source else {}
+    data = team.prepare_data(source)
     top = team.select_top50(team.process_planets(data))
     items = []
     for row in top.to_dict("records"):
+        reference = str(references.get(row["pl_name"]) or "").casefold()
+        radius_source = (
+            "Оценка NASA (расчёт)" if "calculated_value" in reference or "calculated value" in reference
+            else "NASA, из публикации" if reference else "NASA, ссылка на источник отсутствует"
+        )
+        breakdown = {}
+        for factor, weight in team.WEIGHTS.items():
+            score = number_or_none(row[factor])
+            breakdown[factor] = {
+                "weight": weight, "score": score,
+                "contribution": 0.0 if score is None else score * weight / 100,
+            }
         items.append({
             "rank": int(row["rank"]),
             "name": row["pl_name"],
@@ -53,6 +68,18 @@ def calculate_ranking(source_rows):
             "optimistic_zone": row["optimistic_hz_status"],
             "quality": row["confidence"],
             "category": row["esi_class"],
+            "radius_source": radius_source,
+            "density_source": row["density_source"],
+            "insolation_source": row["insolation_source"],
+            "score_breakdown": breakdown,
+            "habitable_zone": {
+                key: number_or_none(row[key])
+                for key in (
+                    "hz_inner_au", "hz_outer_au", "optimistic_hz_inner_au", "optimistic_hz_outer_au",
+                    "hz_inner_flux", "hz_outer_flux", "optimistic_hz_inner_flux", "optimistic_hz_outer_flux",
+                    "orbit_periastron_au", "orbit_apastron_au",
+                )
+            },
             "mass_source": "NASA" if number_or_none(row["pl_bmasse"]) is not None else "Нет данных",
             "mass_provenance": row["mass_provenance"] or None,
             "missing_data": row["missing_data"],

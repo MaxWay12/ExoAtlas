@@ -51,3 +51,5 @@ CREATE TABLE IF NOT EXISTS catalog_state (
     imported_at timestamptz NOT NULL,
     planet_count integer NOT NULL CHECK (planet_count > 0)
 );
+
+ALTER TABLE catalog_state ADD COLUMN IF NOT EXISTS nasa_downloaded_at timestamptz;

@@ -32,6 +32,26 @@ export interface RankedPlanet {
   optimistic_zone?: string
   data_coverage_pct?: number | null
   earth_similarity_percent?: number | null
+  radius_source?: string
+  density_source?: string
+  insolation_source?: string
+  score_breakdown?: Record<'hz_score' | 'radius_score' | 'density_score', {
+    weight: number
+    score: number | null
+    contribution: number
+  }>
+  habitable_zone?: {
+    hz_inner_au: number | null
+    hz_outer_au: number | null
+    optimistic_hz_inner_au: number | null
+    optimistic_hz_outer_au: number | null
+    hz_inner_flux: number | null
+    hz_outer_flux: number | null
+    optimistic_hz_inner_flux: number | null
+    optimistic_hz_outer_flux: number | null
+    orbit_periastron_au: number | null
+    orbit_apastron_au: number | null
+  }
   quality: string
   category: string
   radius_earth: number | null
@@ -49,6 +69,7 @@ export interface RankedPlanet {
 }
 
 export interface Ranking {
+  nasa_downloaded_at?: string | null
   source: 'team_csv' | 'team_script'
   calculated_at: string | null
   items: RankedPlanet[]

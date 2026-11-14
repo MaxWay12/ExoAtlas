@@ -183,6 +183,8 @@ def ranking(db: Database, limit: Annotated[int, Query(ge=1, le=50)] = 50):
         "SELECT calculated_at, items FROM habitability_ranking WHERE model = %s",
         (RANKING_MODEL,),
     ).fetchone()
+    catalog = db.execute("SELECT nasa_downloaded_at FROM catalog_state").fetchone()
+    metadata = {"nasa_downloaded_at": catalog["nasa_downloaded_at"] if catalog else None}
     if row is None:
-        return {"source": "team_csv", "calculated_at": None, "items": seed_ranking()[:limit]}
-    return {"source": "team_script", "calculated_at": row["calculated_at"], "items": row["items"][:limit]}
+        return {**metadata, "source": "team_csv", "calculated_at": None, "items": seed_ranking()[:limit]}
+    return {**metadata, "source": "team_script", "calculated_at": row["calculated_at"], "items": row["items"][:limit]}

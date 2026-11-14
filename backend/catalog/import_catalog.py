@@ -1,4 +1,5 @@
 import math
+from datetime import datetime, timezone
 from uuid import NAMESPACE_URL, uuid5
 from xml.etree import ElementTree
 
@@ -95,10 +96,11 @@ def fetch_catalog():
         follow_redirects=True,
     )
     response.raise_for_status()
-    return parse_catalog(response.content, with_ranking=True)
+    downloaded_at = datetime.now(timezone.utc)
+    return (*parse_catalog(response.content, with_ranking=True), downloaded_at)
 
 
-def replace_catalog(connection, systems, planets):
+def replace_catalog(connection, systems, planets, downloaded_at=None):
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM planets")
         cursor.execute("DELETE FROM systems")
@@ -118,12 +120,13 @@ def replace_catalog(connection, systems, planets):
         )
         cursor.execute(
             """
-            INSERT INTO catalog_state (singleton, imported_at, planet_count)
-            VALUES (true, clock_timestamp(), %s)
+            INSERT INTO catalog_state (singleton, imported_at, planet_count, nasa_downloaded_at)
+            VALUES (true, clock_timestamp(), %s, %s)
             ON CONFLICT (singleton) DO UPDATE
-            SET imported_at = EXCLUDED.imported_at, planet_count = EXCLUDED.planet_count
+            SET imported_at = EXCLUDED.imported_at, planet_count = EXCLUDED.planet_count,
+                nasa_downloaded_at = EXCLUDED.nasa_downloaded_at
             """,
-            (len(planets),),
+            (len(planets), downloaded_at),
         )
 
 
@@ -132,9 +135,9 @@ def main():
         locked = connection.execute("SELECT pg_try_advisory_xact_lock(51351021)").fetchone()[0]
         if not locked:
             raise SystemExit("A catalog import is already running")
-        systems, planets, ranking = fetch_catalog()
+        systems, planets, ranking, downloaded_at = fetch_catalog()
         create_schema(connection)
-        replace_catalog(connection, systems, planets)
+        replace_catalog(connection, systems, planets, downloaded_at)
         connection.execute(
             """
             INSERT INTO habitability_ranking (singleton, calculated_at, items, model)

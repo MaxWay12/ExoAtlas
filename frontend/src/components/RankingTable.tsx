@@ -7,6 +7,47 @@ const number = new Intl.NumberFormat('ru', { maximumFractionDigits: 3 })
 const score = new Intl.NumberFormat('ru', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const value = (numberValue: number | null, unit: string) =>
   numberValue == null ? '—' : number.format(numberValue) + ' ' + unit
+const time = (date: string) => new Date(date).toLocaleString('ru', { timeZone: 'Europe/Moscow' }) + ' МСК'
+const factors = [['hz_score', 'Обитаемая зона'], ['radius_score', 'Радиус'], ['density_score', 'Плотность']] as const
+
+function range(inner: number | null, outer: number | null, unit: string) {
+  return inner == null || outer == null ? '—' : `${number.format(inner)}–${value(outer, unit)}`
+}
+
+function ScoreExplanation({ planet }: { planet: RankedPlanet }) {
+  const breakdown = planet.score_breakdown
+  const zone = planet.habitable_zone
+  if (!breakdown) return null
+  const formula = factors.map(([key, label]) => `${label} × ${number.format(breakdown[key].weight / 100)}`).join(' + ')
+  return (
+    <details className="score-explanation">
+      <summary>Как рассчитан балл?</summary>
+      <p>{formula}. Баллы факторов от 0 до 100.</p>
+      <dl>
+        {factors.map(([key, label]) => {
+          const factor = breakdown[key]
+          return <div className="score-factor" key={key}>
+            <dt>{label} ({factor.weight}%)</dt>
+            <dd>{factor.score == null ? 'Нет данных → 0 баллов'
+              : `${score.format(factor.score)} × ${number.format(factor.weight / 100)} = ${score.format(factor.contribution)}`}</dd>
+          </div>
+        })}
+        <dt><strong>Итого</strong></dt><dd><strong>{score.format(planet.score)} из 100</strong></dd>
+      </dl>
+      <p>Полнота — сумма весов факторов, для которых рассчитан балл. Высокая: от 80%, средняя: от 55%, низкая: ниже 55%. Вес пропущенного фактора не перераспределяется. Вклады показаны с округлением.</p>
+      {zone && <>
+        <p>Границы обитаемой зоны рассчитаны по модели Коппарапу. <a href="https://arxiv.org/abs/1404.5292">Коппарапу и соавт., 2014</a></p>
+        <dl>
+          <dt>Консервативные границы</dt><dd>{range(zone.hz_inner_au, zone.hz_outer_au, 'а.е.')}</dd>
+          <dt>Оптимистические границы</dt><dd>{range(zone.optimistic_hz_inner_au, zone.optimistic_hz_outer_au, 'а.е.')}</dd>
+          <dt>Орбита от перицентра до апоцентра</dt><dd>{range(zone.orbit_periastron_au, zone.orbit_apastron_au, 'а.е.')}</dd>
+          <dt>Консервативный диапазон потока</dt><dd>{range(zone.hz_outer_flux, zone.hz_inner_flux, 'S⊕')}</dd>
+          <dt>Оптимистический диапазон потока</dt><dd>{range(zone.optimistic_hz_outer_flux, zone.optimistic_hz_inner_flux, 'S⊕')}</dd>
+        </dl>
+      </>}
+    </details>
+  )
+}
 
 export function RankDetails({ planet }: { planet: RankedPlanet }) {
   return (
@@ -18,15 +59,16 @@ export function RankDetails({ planet }: { planet: RankedPlanet }) {
         {planet.optimistic_zone && <><dt>Оптимистическая зона</dt><dd>{planet.optimistic_zone}</dd></>}
         {planet.earth_similarity_percent != null && <><dt>Сходство с Землёй</dt><dd>{number.format(planet.earth_similarity_percent)}%</dd></>}
         <dt>Звезда</dt><dd>{planet.hostname ?? '—'}</dd>
-        <dt>Радиус</dt><dd>{value(planet.radius_earth, 'R⊕')}</dd>
-        <dt>Масса</dt><dd>{value(planet.mass_earth, 'M⊕')} · {planet.mass_source}{planet.mass_provenance && ' / ' + planet.mass_provenance}</dd>
-        <dt>Равновесная температура</dt><dd>{value(planet.temperature_k, 'K')}</dd>
-        <dt>Плотность</dt><dd>{value(planet.density_g_cm3, 'г/см³')}</dd>
+        <dt>Радиус</dt><dd>{value(planet.radius_earth, 'R⊕')}{planet.radius_source && <> · {planet.radius_source}</>}</dd>
+        <dt>Масса</dt><dd>{value(planet.mass_earth, 'M⊕')} · {planet.mass_source}{planet.mass_provenance && ' / ' + (planet.mass_provenance === 'Msini' ? 'минимальная масса (m sin i)' : planet.mass_provenance)}</dd>
+        <dt>Равновесная температура</dt><dd>{value(planet.temperature_k, 'K')}{planet.temperature_k != null && ' · NASA'}</dd>
+        <dt>Плотность для рейтинга</dt><dd>{value(planet.density_g_cm3, 'г/см³')}{planet.density_source && <> · {planet.density_source}</>}</dd>
         <dt>Температура звезды</dt><dd>{value(planet.star_temperature_k, 'K')}</dd>
-        <dt>Поток излучения</dt><dd>{value(planet.insolation, 'S⊕')}</dd>
+        <dt>Поток излучения</dt><dd>{value(planet.insolation, 'S⊕')}{planet.insolation_source && <> · {planet.insolation_source}</>}</dd>
         <dt>Большая полуось</dt><dd>{value(planet.semi_major_axis_au, 'а.е.')}</dd>
         <dt>Расстояние</dt><dd>{value(planet.distance_pc, 'пк')}</dd>
       </dl>
+      <ScoreExplanation planet={planet} />
       <p>Пригодность для человека. {planet.human_habitability}</p>
       <details><summary>Недостающие данные</summary><p>{planet.missing_data}</p></details>
     </div>
@@ -54,8 +96,9 @@ export function RankingTable({ ranking, error }: { ranking: Ranking | null; erro
       {error ? <p role="alert">Рейтинг недоступен. {error}</p> : !ranking ? <p role="status">Загрузка рейтинга…</p> : (
         <>
           <p className="muted">{ranking.calculated_at
-            ? 'Последний пересчёт · ' + new Date(ranking.calculated_at).toLocaleString('ru', { timeZone: 'Europe/Moscow' }) + ' МСК'
-            : 'Исходная таблица команды'}</p>
+            ? 'Последний пересчёт · ' + time(ranking.calculated_at)
+            : 'Резервный снимок рейтинга'}</p>
+          <p className="muted">Последняя успешная загрузка NASA · {ranking.nasa_downloaded_at ? time(ranking.nasa_downloaded_at) : 'время загрузки не записано'}. Обновление в 00:00 и 12:00 МСК. Источник: <a href="https://exoplanetarchive.ipac.caltech.edu/docs/TAP/usingTAP.html">NASA Exoplanet Archive TAP (PSCompPars)</a>.</p>
           <p role="status">{items.length ? `Найдено планет: ${items.length} из ${ranking.items.length}` : 'Планеты не найдены.'}</p>
           {!!items.length && <div className="table-scroll">
             <table>

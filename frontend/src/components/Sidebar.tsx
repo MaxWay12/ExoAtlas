@@ -1,10 +1,11 @@
 import type { ProjectInfo } from '../api/types'
+import { NavIcon, type IconName } from './icons'
 
-const items = [
-  { id: 'home', label: 'Главная', path: 'M12 3a9 9 0 100 18 9 9 0 000-18zm0 6a3 3 0 100 6 3 3 0 000-6z' },
-  { id: 'galaxy', label: 'Вселенная', path: 'M12 2v4M12 18v4M2 12h4M18 12h4M12 9a3 3 0 100 6 3 3 0 000-6zM6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2' },
-  { id: 'top', label: 'Топ-50', path: 'M4 19V9M10 19V5M16 19v-7M21 19H3' },
-  { id: 'catalog', label: 'Все экзопланеты', path: 'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z' },
+const items: { id: IconName; label: string }[] = [
+  { id: 'home', label: 'Главная' },
+  { id: 'galaxy', label: 'Вселенная' },
+  { id: 'top', label: 'Топ-50' },
+  { id: 'catalog', label: 'Все экзопланеты' },
 ]
 
 export function Sidebar({ project, active }: { project: ProjectInfo | null; active: string }) {
@@ -14,9 +15,7 @@ export function Sidebar({ project, active }: { project: ProjectInfo | null; acti
       <nav aria-label="Разделы">
         {items.map((item) => (
           <a key={item.id} href={`#${item.id}`} aria-current={active === item.id ? 'page' : undefined}>
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-              <path d={item.path} />
-            </svg>
+            <NavIcon name={item.id} />
             {item.label}
           </a>
         ))}

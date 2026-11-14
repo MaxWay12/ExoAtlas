@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import type { CatalogPage, CatalogPlanet } from '../api/types'
+import { physicalFields, PlanetFilters } from './PlanetFilters'
+import type { PhysicalFilters } from './PlanetFilters'
 
 const pageSize = 25
 const number = new Intl.NumberFormat('ru', { maximumFractionDigits: 5 })
 
 export function Catalog() {
-  const [query, setQuery] = useState('')
+  const [search, setSearch] = useState({ query: '', filters: {} as PhysicalFilters })
   const [page, setPage] = useState(1)
   const [data, setData] = useState<CatalogPage | null>(null)
   const [error, setError] = useState('')
@@ -19,13 +21,14 @@ export function Catalog() {
     setData(null)
     setError('')
     const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) })
-    if (query) params.set('q', query)
+    if (search.query) params.set('q', search.query)
+    for (const [key, value] of Object.entries(search.filters)) params.set(key, String(value))
     api.catalog(params, controller.signal).then(
       (result) => { if (!controller.signal.aborted) setData(result) },
       (cause: Error) => { if (!controller.signal.aborted) setError(cause.message) },
     )
     return () => controller.abort()
-  }, [query, page])
+  }, [search, page])
 
   useEffect(() => {
     if (!selected) return
@@ -42,15 +45,11 @@ export function Catalog() {
   return (
     <section aria-labelledby="catalog-title">
       <h2 id="catalog-title">Все экзопланеты</h2>
-      <form className="catalog-search" onSubmit={(event) => {
-        event.preventDefault()
-        setQuery(String(new FormData(event.currentTarget).get('q')).trim())
+      <PlanetFilters onApply={(filters, query) => {
+        setSearch({ query, filters })
         setPage(1)
         setSelected(null)
-      }}>
-        <label>Планета или звезда<input name="q" type="search" maxLength={150} placeholder="TRAPPIST-1" /></label>
-        <button>Найти</button>
-      </form>
+      }} />
       {error ? <p role="alert">Каталог недоступен. {error}</p> : !data ? <p role="status">Загрузка каталога…</p> : (
         <>
           <p role="status">{data.total ? `Найдено планет: ${number.format(data.total)}` : 'Планеты не найдены.'}</p>
@@ -81,7 +80,9 @@ export function Catalog() {
             <h3>{detail.name}</h3>
             <p>Звезда · {detail.hostname ?? '—'}</p>
             <p>Период орбиты (дни) · {detail.orbital_period_days ?? '—'}</p>
-            <p>Большая полуось (а.е.) · {detail.semi_major_axis_au ?? '—'}</p>
+            {physicalFields.map(({ property, label, unit }) => (
+              <p key={property}>{label} ({unit}) · {detail[property] == null ? '—' : number.format(detail[property])}</p>
+            ))}
           </>
         )}
         <button onClick={() => setSelected(null)}>Закрыть</button>

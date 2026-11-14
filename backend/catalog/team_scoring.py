@@ -3,6 +3,8 @@
 import numpy as np
 import pandas as pd
 
+from .physical import density_from_mass, estimate_mass
+
 NUMBER_OF_PLANETS = 50
 
 # Допустимый диапазон радиусов в радиусах Земли
@@ -14,7 +16,6 @@ MIN_DENSITY = 1.0
 MAX_DENSITY = 20.0
 
 # Константы
-EARTH_DENSITY = 5.514
 SOLAR_TEMPERATURE = 5772.0
 
 # 2. ПОДГОТОВКА ДАННЫХ
@@ -84,15 +85,6 @@ def impute_mass_and_density(data):
 
     print("Импутация массы и плотности...")
 
-    # Восстановление массы по формуле масса-радиус
-    def estimate_mass(radius):
-        if pd.isna(radius):
-            return np.nan
-        if radius < 1.5:
-            return 1.1 * (radius ** 3.4)
-        else:
-            return 1.7 * (radius ** 1.3)
-
     # Сохраняем источник массы
     data["mass_source"] = np.where(
         data["pl_bmasse"].notna(),
@@ -110,7 +102,7 @@ def impute_mass_and_density(data):
             return row["pl_dens"]
         if pd.isna(row["pl_bmasse"]) or pd.isna(row["pl_rade"]) or row["pl_rade"] <= 0:
             return np.nan
-        return EARTH_DENSITY * row["pl_bmasse"] / row["pl_rade"] ** 3
+        return density_from_mass(row["pl_bmasse"], row["pl_rade"])
 
     # Предполагаем, что pl_dens уже есть в данных
     if "pl_dens" not in data.columns:

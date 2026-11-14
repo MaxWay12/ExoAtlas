@@ -5,6 +5,15 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
+PHYSICAL_RANGES = {
+    "radius": "radius_earth",
+    "temperature": "temperature_k",
+    "density": "density_g_cm3",
+    "star_temperature": "star_temperature_k",
+    "orbit": "semi_major_axis_au",
+}
+
+
 class Filters(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
 
@@ -14,6 +23,14 @@ class Filters(BaseModel):
     year_to: int | None = Field(default=None, ge=0, le=9999)
     radius_min: float | None = Field(default=None, ge=0)
     radius_max: float | None = Field(default=None, ge=0)
+    temperature_min: float | None = Field(default=None, ge=0)
+    temperature_max: float | None = Field(default=None, ge=0)
+    density_min: float | None = Field(default=None, ge=0)
+    density_max: float | None = Field(default=None, ge=0)
+    star_temperature_min: float | None = Field(default=None, ge=0)
+    star_temperature_max: float | None = Field(default=None, ge=0)
+    orbit_min: float | None = Field(default=None, ge=0)
+    orbit_max: float | None = Field(default=None, ge=0)
     distance_min: float | None = Field(default=None, ge=0)
     distance_max: float | None = Field(default=None, ge=0)
 
@@ -21,8 +38,8 @@ class Filters(BaseModel):
     def check_ranges(self):
         for lower, upper in (
             ("year_from", "year_to"),
-            ("radius_min", "radius_max"),
             ("distance_min", "distance_max"),
+            *((f"{field}_min", f"{field}_max") for field in PHYSICAL_RANGES),
         ):
             minimum, maximum = getattr(self, lower), getattr(self, upper)
             if minimum is not None and maximum is not None and minimum > maximum:
@@ -56,6 +73,9 @@ class Planet(BaseModel):
     radius_earth: float | None
     orbital_period_days: float | None
     semi_major_axis_au: float | None
+    temperature_k: float | None = None
+    density_g_cm3: float | None = None
+    star_temperature_k: float | None = None
 
 
 class PlanetPage(BaseModel):

@@ -10,11 +10,11 @@ from psycopg import Connection, sql
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
 
-from .db import database_url
+from .db import create_schema, database_url
 from .ranking import seed_ranking
 from .models import (
     CatalogState, Filters, Planet, PlanetPage, PlanetQuery, Stats, SystemDetail,
-    SystemPoint,
+    SystemPoint, PHYSICAL_RANGES,
 )
 
 FROM_PLANETS = sql.SQL(" FROM planets p LEFT JOIN systems s ON s.id = p.system_id")
@@ -28,10 +28,13 @@ SORT_COLUMNS = {
 RANGE_FILTERS = {
     "year_from": "p.discovery_year >= %s",
     "year_to": "p.discovery_year <= %s",
-    "radius_min": "p.radius_earth >= %s",
-    "radius_max": "p.radius_earth <= %s",
     "distance_min": "s.distance_pc >= %s",
     "distance_max": "s.distance_pc <= %s",
+    **{
+        f"{field}_{bound}": f"p.{column} {operator} %s"
+        for field, column in PHYSICAL_RANGES.items()
+        for bound, operator in (("min", ">="), ("max", "<="))
+    },
 }
 
 
@@ -42,6 +45,8 @@ async def lifespan(app: FastAPI):
         open=False,
     ) as pool:
         pool.wait(timeout=10)
+        with pool.connection() as connection:
+            create_schema(connection)
         app.state.pool = pool
         yield
 

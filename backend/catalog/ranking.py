@@ -3,6 +3,8 @@ from functools import lru_cache
 from io import StringIO
 from pathlib import Path
 
+from .physical import density_from_mass
+
 RANKING_COLUMNS = (
     "pl_bmasse", "pl_bmassprov", "pl_eqt", "pl_insol", "pl_orbeccen",
     "st_teff", "st_rad", "st_mass",
@@ -15,13 +17,14 @@ NUMBER_FIELDS = {
     "insolation": "Поток излучения (потоки Земли)",
     "distance_pc": "Расстояние до системы (пк)",
     "semi_major_axis_au": "Большая полуось орбиты (а.е.)",
+    "star_temperature_k": "Температура звезды (K)",
 }
 
 
 def read_ranking(rows):
     items = []
     for row in rows:
-        items.append({
+        item = {
             "rank": int(row["Место в рейтинге"]),
             "name": row["Название планеты"],
             "hostname": row["Родительская звезда"] or None,
@@ -34,7 +37,9 @@ def read_ranking(rows):
             "missing_data": row["Недостающие данные"],
             "human_habitability": row["Пригодность для человека"],
             **{name: float(row[column]) if row[column] else None for name, column in NUMBER_FIELDS.items()},
-        })
+        }
+        item["density_g_cm3"] = density_from_mass(item["mass_earth"], item["radius_earth"])
+        items.append(item)
     if [item["rank"] for item in items] != list(range(1, 51)):
         raise ValueError("Expected 50 ranked candidates")
     return items

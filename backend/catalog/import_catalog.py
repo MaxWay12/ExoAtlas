@@ -7,6 +7,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from .db import create_schema, database_url
+from .physical import density_from_mass, estimate_mass, estimate_temperature
 from .ranking import calculate_ranking, RANKING_COLUMNS
 
 TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
@@ -29,6 +30,22 @@ def number(value):
     return result
 
 
+def physical_values(row):
+    radius = number(row.get("pl_rade"))
+    orbit = number(row.get("pl_orbsmax"))
+    star_temperature = number(row.get("st_teff"))
+    temperature = number(row.get("pl_eqt"))
+    if temperature is None:
+        temperature = estimate_temperature(star_temperature, number(row.get("st_rad")), orbit)
+    density = number(row.get("pl_dens"))
+    if density is None and radius is not None and radius > 0:
+        mass = number(row.get("pl_bmasse"))
+        if mass is None and 0.5 <= radius <= 3:
+            mass = estimate_mass(radius)
+        density = density_from_mass(mass, radius)
+    return temperature, density, star_temperature
+
+
 def parse_catalog(content, *, with_ranking=False):
     document = ElementTree.fromstring(content)
     statuses = [
@@ -44,6 +61,8 @@ def parse_catalog(content, *, with_ranking=False):
         raise ValueError("Missing VOTable TABLEDATA")
     fields = [field.get("name", "").lower() for field in table.findall("./{*}FIELD")]
     expected = (*COLUMNS, *RANKING_COLUMNS) if with_ranking else COLUMNS
+    if with_ranking and "pl_dens" in fields:
+        expected = (*expected, "pl_dens")
     if len(fields) != len(expected) or set(fields) != set(expected):
         raise ValueError("Unexpected TAP columns")
 
@@ -54,7 +73,8 @@ def parse_catalog(content, *, with_ranking=False):
         values = [(cell.text or "").strip() for cell in entry.findall("./{*}TD")]
         row = dict(zip(fields, values, strict=True))
         if with_ranking:
-            source_rows.append(row)
+            # The published density is used for browsing, while the ranking keeps its original inputs.
+            source_rows.append({key: value for key, value in row.items() if key != "pl_dens"})
         name = row["pl_name"]
         host = row["hostname"] or None
         if not name or name in planets:
@@ -75,20 +95,25 @@ def parse_catalog(content, *, with_ranking=False):
             int(row["disc_year"]) if row["disc_year"] else None,
             row["discoverymethod"] or None,
             *(number(row[key]) for key in COLUMNS[7:]),
+            *physical_values(row),
         )
 
     if not planets:
         raise ValueError("TAP returned an empty catalog")
     snapshot = (list(systems.values()), list(planets.values()))
     if with_ranking:
-        return (*snapshot, calculate_ranking(source_rows))
+        ranking = calculate_ranking(source_rows)
+        for item in ranking:
+            temperature, density, star_temperature = planets[item["name"]][-3:]
+            item.update(temperature_k=temperature, density_g_cm3=density, star_temperature_k=star_temperature)
+        return (*snapshot, ranking)
     return snapshot
 
 
 def fetch_catalog():
     response = httpx.get(
         TAP_URL,
-        params={"query": f"SELECT {', '.join((*COLUMNS, *RANKING_COLUMNS))} FROM pscomppars ORDER BY pl_name",
+        params={"query": f"SELECT {', '.join((*COLUMNS, *RANKING_COLUMNS, 'pl_dens'))} FROM pscomppars ORDER BY pl_name",
                 "format": "votable"},
         timeout=60,
         follow_redirects=True,
@@ -110,8 +135,8 @@ def replace_catalog(connection, systems, planets):
             """
             INSERT INTO planets (
                 id, system_id, name, discovery_year, discovery_method, radius_earth,
-                orbital_period_days, semi_major_axis_au
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                orbital_period_days, semi_major_axis_au, temperature_k, density_g_cm3, star_temperature_k
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             planets,
         )

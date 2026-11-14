@@ -23,12 +23,6 @@ export interface ChartPoint {
   value: number
 }
 
-export interface ChartData {
-  title: string
-  kind: 'line' | 'bar'
-  points: ChartPoint[]
-}
-
 export interface RankedPlanet {
   rank: number
   name: string
@@ -40,6 +34,8 @@ export interface RankedPlanet {
   radius_earth: number | null
   mass_earth: number | null
   temperature_k: number | null
+  density_g_cm3: number | null
+  star_temperature_k: number | null
   insolation: number | null
   distance_pc: number | null
   semi_major_axis_au: number | null
@@ -65,6 +61,9 @@ export interface CatalogPlanet {
   distance_pc: number | null
   orbital_period_days: number | null
   semi_major_axis_au: number | null
+  temperature_k: number | null
+  density_g_cm3: number | null
+  star_temperature_k: number | null
 }
 
 export interface CatalogPage {

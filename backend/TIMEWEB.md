@@ -67,3 +67,5 @@ docker compose -f compose.yaml -f compose.timeweb.yaml logs --tail=60 importer s
 ```sh
 docker compose -f compose.yaml -f compose.timeweb.yaml run --rm importer
 ```
+
+При первом обновлении до версии с физическими фильтрами дождись успешного импорта новой версией. Он заполнит плотность и температуры для фильтрации существующего каталога и рейтинга.

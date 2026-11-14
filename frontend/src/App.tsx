@@ -5,6 +5,7 @@ import { Sidebar } from './components/Sidebar'
 import { Scene } from './components/Scene'
 import { Catalog } from './components/Catalog'
 import { RankingTable, RankDetails } from './components/RankingTable'
+import { DashboardCharts } from './components/DashboardCharts'
 
 function currentPage() {
   const hash = location.hash.slice(1)
@@ -51,35 +52,38 @@ export default function App() {
           <RankingTable ranking={ranking.data} error={ranking.error} />
         ) : (
           <>
-            <header className="scene-heading">
-              <h2>Топ-5 по индексу жизнепригодности</h2>
-              <p>Планеты из разных систем. Размеры и движение на схеме условные.</p>
-            </header>
-            {planets.length > 0 && (
-              <>
-                <div className="scene">
-                  <Scene planets={planets} selectedId={selected} onSelect={select} onArrive={() => setOpen(true)} />
+            <section className="scene-panel" aria-labelledby="scene-title">
+              <header className="scene-heading">
+                <h2 id="scene-title">Топ-5 по индексу жизнепригодности</h2>
+                <p>Планеты из разных систем. Размеры и движение на схеме условные.</p>
+              </header>
+              {planets.length > 0 && (
+                <>
+                  <div className="scene">
+                    <Scene planets={planets} selectedId={selected} onSelect={select} onArrive={() => setOpen(true)} />
+                  </div>
+                  <div className="planet-picker" aria-label="Выбрать планету">
+                    {planets.map((planet, i) => (
+                      <button key={planet.id} aria-pressed={selected === planet.id} onClick={() => select(planet.id)}>
+                        <span className="planet-dot" style={{ background: planet.color }} />
+                        {i + 1}. {planet.name}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              {!planets.length && <p className="scene-status" role="status">
+                {ranking.error ? 'Не удалось загрузить рейтинг. ' + ranking.error : 'Загрузка рейтинга…'}
+              </p>}
+              {open && current && (
+                <div className="popup" role="dialog" aria-label={current.name}>
+                  <h2>{current.name}</h2>
+                  {ranked ? <RankDetails planet={ranked} /> : <p>{current.description}</p>}
+                  <button onClick={close}>Закрыть</button>
                 </div>
-                <div className="planet-picker" aria-label="Выбрать планету">
-                  {planets.map((planet, i) => (
-                    <button key={planet.id} aria-pressed={selected === planet.id} onClick={() => select(planet.id)}>
-                      <span className="planet-dot" style={{ background: planet.color }} />
-                      {i + 1}. {planet.name}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-            {!planets.length && <p className="scene-status" role="status">
-              {ranking.error ? 'Не удалось загрузить рейтинг. ' + ranking.error : 'Загрузка рейтинга…'}
-            </p>}
-            {open && current && (
-              <div className="popup" role="dialog" aria-label={current.name}>
-                <h2>{current.name}</h2>
-                {ranked ? <RankDetails planet={ranked} /> : <p>{current.description}</p>}
-                <button onClick={close}>Закрыть</button>
-              </div>
-            )}
+              )}
+            </section>
+            <DashboardCharts ranking={ranking.data} rankingError={ranking.error} />
           </>
         )}
       </main>

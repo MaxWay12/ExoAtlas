@@ -25,12 +25,16 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 
 /* Сцена */
 .stage { position: relative; flex: 1; min-height: 100vh; overflow: hidden; }
+.scene-panel { position: relative; min-height: clamp(460px, 62vh, 650px); }
 .scene { position: absolute; inset: 0; }
-.chart-slot { position: absolute; width: 300px; z-index: 1; }
-.chart-1 { top: 24px; left: 24px; }
-.chart-2 { right: 24px; bottom: 24px; }
-.chart { padding: 14px; border: 1px solid #8a2a3a; border-radius: 12px; background: rgba(10, 12, 30, 0.7); }
+.dashboard-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 24px 24px; }
+.chart { min-width: 0; padding: 16px; border: 1px solid #2b3153; border-radius: 12px; background: #101426; }
 .chart h2 { margin: 0 0 8px; font-size: 15px; }
+.physical-filters summary { cursor: pointer; color: #b5c8ff; }
+.chart-bars li > div:first-child { display: flex; justify-content: space-between; gap: 8px; }
+.chart-bars { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 13px; font-size: 13px; }
+.chart-track { background: #242c4a; border-radius: 4px; height: 8px; margin-top: 5px; overflow: hidden; }
+.chart-track span { display: block; background: #a3a0ff; height: 100%; }
 .popup { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, calc(-50% - 20px)); width: 240px; padding: 14px 16px; border: 2px solid var(--indigo); border-radius: 16px; background: rgba(10, 12, 30, 0.92); }
 .popup-head { display: flex; align-items: center; gap: 8px; }
 .popup h2 { margin: 0; font-size: 16px; }
@@ -67,9 +71,21 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .table-scroll summary, .table-link { color: #b5c8ff; cursor: pointer; }
 .table-link { background: transparent; border: none; padding: 0; font: inherit; text-decoration: underline; }
 .table-scroll .rank-details { min-width: 230px; }
+.rank-number { display: inline-grid; place-items: center; min-width: 28px; min-height: 26px; border: 1px solid transparent; border-radius: 6px; font-variant-numeric: tabular-nums; }
+.rank-first { background: var(--sun); color: var(--space); font-weight: 700; }
+.rank-leader { border-color: var(--sun); color: var(--sun); font-weight: 600; }
 .catalog-search, .pagination { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
 .catalog-search label { display: grid; gap: 5px; }
 .catalog-search input { max-width: 100%; padding: 8px 12px; border: 1px solid #6b7099; border-radius: 8px; background: #141932; color: var(--text); font: inherit; }
+.physical-filters, .filter-error { flex-basis: 100%; }
+.physical-filters { padding: 12px; border: 1px solid #2b3153; border-radius: 8px; }
+.physical-filters p { margin: 8px 0 0; font-size: 13px; }
+.filter-ranges { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 215px), 1fr)); gap: 10px; margin: 12px 0; }
+.filter-ranges fieldset { min-width: 0; margin: 0; padding: 8px; border: 1px solid #2b3153; border-radius: 8px; }
+.filter-ranges legend, .range-inputs label { font-size: 13px; }
+.range-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.range-inputs input { width: 100%; min-width: 0; }
+.filter-error { margin: 0; color: #ffb1ba; }
 .pagination { align-items: center; margin-top: 16px; }
 .pagination button:disabled { opacity: .45; cursor: default; }
 
@@ -83,8 +99,12 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
   .sidebar nav { flex-direction: row; flex-wrap: wrap; }
   .team { flex: 1 0 100%; }
   .team ul { display: flex; flex-wrap: wrap; gap: 3px 16px; }
-  .stage.home { min-height: max(650px, 80vh); }
   .stage.data-page { min-height: 70vh; }
-  .chart-slot { width: calc(100% - 48px); }
-  .scene { top: 125px; bottom: 150px; }
+  .scene { top: 85px; bottom: 96px; }
+}
+
+@media (max-width: 650px) {
+  .dashboard-charts { grid-template-columns: 1fr; padding: 0 16px 16px; }
+  .scene-panel { min-height: 500px; }
+  .scene { top: 115px; bottom: 125px; }
 }

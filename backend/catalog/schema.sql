@@ -19,6 +19,11 @@ CREATE TABLE IF NOT EXISTS planets (
 
 CREATE INDEX IF NOT EXISTS planets_system_id_idx ON planets(system_id);
 
+ALTER TABLE planets
+    ADD COLUMN IF NOT EXISTS temperature_k double precision,
+    ADD COLUMN IF NOT EXISTS density_g_cm3 double precision,
+    ADD COLUMN IF NOT EXISTS star_temperature_k double precision;
+
 CREATE TABLE IF NOT EXISTS habitability_ranking (
     singleton boolean PRIMARY KEY CHECK (singleton),
     calculated_at timestamptz NOT NULL,

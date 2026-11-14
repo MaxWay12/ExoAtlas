@@ -126,7 +126,11 @@ function FitOrbit() {
     const aspect = size.width / size.height
     const halfAngle = MathUtils.degToRad(camera.fov / 2)
     const horizontalExtent = A + 1
-    camera.position.z = Math.max(12, horizontalExtent / (aspect * Math.tan(halfAngle)) + 2)
+    const chartWidth = Math.min(280, Math.max(215, (size.width - 48) * 0.21))
+    const orbitAspect = window.matchMedia('(min-width: 1120px)').matches
+      ? (size.width - 2 * (chartWidth + 36)) / size.height
+      : aspect
+    camera.position.z = Math.max(12, horizontalExtent / (orbitAspect * Math.tan(halfAngle)) + 2)
     camera.updateMatrixWorld()
   }, [camera, size.width, size.height])
   return null

@@ -5,10 +5,10 @@ const format = new Intl.NumberFormat('ru')
 
 function distribution(items: RankedPlanet[], property: 'radius_earth' | 'temperature_k', bounds: number[]) {
   const points = bounds.map((bound, index) => ({
-    label: index === 0 ? `Менее ${format.format(bound)}` : `${format.format(bounds[index - 1])} – < ${format.format(bound)}`,
+    label: index === 0 ? `<${format.format(bound)}` : `${format.format(bounds[index - 1])}–${format.format(bound)}`,
     value: 0,
   }))
-  points.push({ label: `От ${format.format(bounds[bounds.length - 1])}`, value: 0 })
+  points.push({ label: `≥${format.format(bounds[bounds.length - 1])}`, value: 0 })
   let unknown = 0
   for (const planet of items) {
     const value = planet[property]
@@ -19,17 +19,16 @@ function distribution(items: RankedPlanet[], property: 'radius_earth' | 'tempera
       points[index === -1 ? bounds.length : index].value += 1
     }
   }
-  if (unknown) points.push({ label: 'Нет данных', value: unknown })
-  return items.length ? points : []
+  return { points: items.length > unknown ? points : [], unknown }
 }
 
 export function DashboardCharts({ ranking, rankingError }: { ranking: Ranking | null; rankingError: string | null }) {
   return (
     <div className="dashboard-charts">
-      <Chart title="Радиус планет из топ-50 (R⊕)" error={rankingError}
-        points={ranking ? distribution(ranking.items, 'radius_earth', [1, 1.5, 2, 2.5]) : null} />
-      <Chart title="Равновесная температура планет из топ-50 (К)" error={rankingError}
-        points={ranking ? distribution(ranking.items, 'temperature_k', [150, 250, 350, 500]) : null} />
+      <Chart title="Радиус планет из топ-50 (R⊕)" kind="bar" error={rankingError}
+        data={ranking ? distribution(ranking.items, 'radius_earth', [1, 1.5, 2, 2.5]) : null} />
+      <Chart title="Равновесная температура из топ-50 (К)" kind="line" error={rankingError}
+        data={ranking ? distribution(ranking.items, 'temperature_k', [150, 250, 350, 500]) : null} />
     </div>
   )
 }

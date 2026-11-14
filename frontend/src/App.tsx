@@ -51,40 +51,38 @@ export default function App() {
         {page === 'catalog' ? <Catalog /> : page === 'top' ? (
           <RankingTable ranking={ranking.data} error={ranking.error} />
         ) : (
-          <>
-            <section className="scene-panel" aria-labelledby="scene-title">
-              <header className="scene-heading">
-                <h2 id="scene-title">Топ-5 по индексу жизнепригодности</h2>
-                <p>Планеты из разных систем. Размеры и движение на схеме условные.</p>
-              </header>
-              {planets.length > 0 && (
-                <>
-                  <div className="scene">
-                    <Scene planets={planets} selectedId={selected} onSelect={select} onArrive={() => setOpen(true)} />
-                  </div>
-                  <div className="planet-picker" aria-label="Выбрать планету">
-                    {planets.map((planet, i) => (
-                      <button key={planet.id} aria-pressed={selected === planet.id} onClick={() => select(planet.id)}>
-                        <span className="planet-dot" style={{ background: planet.color }} />
-                        {i + 1}. {planet.name}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-              {!planets.length && <p className="scene-status" role="status">
-                {ranking.error ? 'Не удалось загрузить рейтинг. ' + ranking.error : 'Загрузка рейтинга…'}
-              </p>}
-              {open && current && (
-                <div className="popup" role="dialog" aria-label={current.name}>
-                  <h2>{current.name}</h2>
-                  {ranked ? <RankDetails planet={ranked} /> : <p>{current.description}</p>}
-                  <button onClick={close}>Закрыть</button>
+          <section className="scene-panel" aria-labelledby="scene-title">
+            <header className="scene-heading">
+              <h2 id="scene-title">Топ-5 по индексу жизнепригодности</h2>
+              <p>Планеты из разных систем. Размеры и движение на схеме условные.</p>
+            </header>
+            {planets.length > 0 && (
+              <>
+                <div className="scene">
+                  <Scene planets={planets} selectedId={selected} onSelect={select} onArrive={() => setOpen(true)} />
                 </div>
-              )}
-            </section>
+                <div className="planet-picker" aria-label="Выбрать планету">
+                  {planets.map((planet, i) => (
+                    <button key={planet.id} aria-pressed={selected === planet.id} onClick={() => select(planet.id)}>
+                      <span className="planet-dot" style={{ background: planet.color }} />
+                      {i + 1}. {planet.name}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {!planets.length && <p className="scene-status" role="status">
+              {ranking.error ? 'Не удалось загрузить рейтинг. ' + ranking.error : 'Загрузка рейтинга…'}
+            </p>}
+            {open && current && (
+              <div className="popup" role="dialog" aria-label={current.name}>
+                <h2>{current.name}</h2>
+                {ranked ? <RankDetails planet={ranked} /> : <p>{current.description}</p>}
+                <button onClick={close}>Закрыть</button>
+              </div>
+            )}
             <DashboardCharts ranking={ranking.data} rankingError={ranking.error} />
-          </>
+          </section>
         )}
       </main>
     </div>

@@ -21,7 +21,7 @@ export function Sidebar({ project, active }: { project: ProjectInfo | null; acti
         ))}
       </nav>
       {project?.team.name && <section className="team" aria-labelledby="team-title">
-        <p className="team-event">Что сделано для TulaHack-2026</p>
+        <p className="team-event">Сделано для TulaHack-2026</p>
         <h2 id="team-title">Команда {project.team.name}</h2>
         <ul>
           {project.team.members.map((member) => <li key={member}>{member}</li>)}

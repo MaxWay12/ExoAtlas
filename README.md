@@ -38,7 +38,7 @@ docker compose logs importer
 
 Для работы над интерфейсом запусти `npm ci` и `npm run dev` в каталоге `frontend`. Vite проксирует запросы к локальному FastAPI. Перед обновлением сайта собери фронтенд через `npm run build` и перенеси содержимое `frontend/dist` в `backend/catalog/frontend`. Эта папка содержит сборку, которую FastAPI отдаёт на VPS.
 
-Подробнее о разработке и публикации: [фронтенд](frontend/README.md), [API и импорт](backend/README.md), [деплой на Timeweb](backend/TIMEWEB.md).
+Инструкции для разработки находятся в [README фронтенда](frontend/README.md) и [README бэкенда](backend/README.md).
 
 ## Команда JPEG
 

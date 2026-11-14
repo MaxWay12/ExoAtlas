@@ -24,8 +24,6 @@ python -m catalog.import_catalog
 python -m uvicorn catalog.api:app
 ```
 
-Для публикации с доменом и HTTPS см. [гайд по Timeweb Cloud](TIMEWEB.md).
-
 ## Маршруты
 
 | GET | Результат |

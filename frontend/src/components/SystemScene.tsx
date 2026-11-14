@@ -46,7 +46,7 @@ function Rig({ looks, star, selectedId, onSelect }: Props) {
     <group rotation={[TILT, 0, 0]}>
       <pointLight intensity={90} color={star} />
       <mesh>
-        <sphereGeometry args={[0.55, 32, 32]} />
+        <sphereGeometry args={[0.55, 64, 48]} />
         <meshBasicMaterial color={star} />
       </mesh>
       <sprite scale={[2.7, 2.7, 1]} raycast={() => null}>

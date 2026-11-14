@@ -9,13 +9,18 @@ import { dustLayout, layoutSystems, R_OUT } from '../galaxy/layout'
 const TILT = -0.95 // наклон диска к камере
 const SPIN = 0.02 // рад/сек, медленное вращение
 
-function makeSprite() {
+function makeSprite(sharp = false) {
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = 64
   const ctx = canvas.getContext('2d')!
   const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
   g.addColorStop(0, 'rgba(255,255,255,1)')
-  g.addColorStop(0.35, 'rgba(255,255,255,.55)')
+  if (sharp) {
+    g.addColorStop(0.64, 'rgba(255,255,255,1)')
+    g.addColorStop(0.88, 'rgba(255,255,255,0)')
+  } else {
+    g.addColorStop(0.35, 'rgba(255,255,255,.55)')
+  }
   g.addColorStop(1, 'rgba(255,255,255,0)')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, 64, 64)
@@ -33,10 +38,11 @@ interface SceneProps {
 }
 
 const MIN_SCALE = 0.65
-const MAX_SCALE = 3
+const MAX_SCALE = 10
 const MAP_HALF_WIDTH = R_OUT + 0.5
 const MAP_HALF_HEIGHT = R_OUT * Math.cos(TILT) + 0.5
 const DRAG_THRESHOLD = 5
+const systemMarkerSize = (scale: number) => MathUtils.clamp(3.8 * Math.sqrt(scale), 3, 8)
 
 const pickSystem: Points['raycast'] = function (this: Points, raycaster, hits) {
   const candidates: typeof hits = []
@@ -72,8 +78,8 @@ function MapControls({ zoomMap, onScale, onPan }: {
   )
 
   useLayoutEffect(() => {
-    raycaster.params.Points = { threshold: 5 / fit }
     view.zoom = fit * scale.current
+    raycaster.params.Points = { threshold: (systemMarkerSize(scale.current) / 2 + 3) / view.zoom }
     view.updateProjectionMatrix()
     clampCenter(view, size.width, size.height)
   }, [view, raycaster, fit, size.width, size.height])
@@ -88,6 +94,7 @@ function MapControls({ zoomMap, onScale, onPan }: {
     view.position.x += x * offset
     view.position.y += y * offset
     view.zoom = nextZoom
+    raycaster.params.Points = { threshold: (systemMarkerSize(next) / 2 + 3) / nextZoom }
     view.updateProjectionMatrix()
     clampCenter(view, size.width, size.height)
     scale.current = next
@@ -181,6 +188,12 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
   const spin = useRef<Group>(null)
   const hovering = useRef(false)
   const sprite = useMemo(makeSprite, [])
+  const marker = useMemo(() => makeSprite(true), [])
+  const markerSize = systemMarkerSize(scale)
+  useEffect(() => () => {
+    marker.dispose()
+    sprite.dispose()
+  }, [marker, sprite])
   // positions[i] и points[i] — одна и та же система; индекс из клика берётся только отсюда
   const positions = useMemo(() => layoutSystems(points), [points])
   const colors = useMemo(() => {
@@ -216,9 +229,9 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
             <bufferAttribute attach="attributes-position" count={dust.positions.length / 3} array={dust.positions} itemSize={3} />
             <bufferAttribute attach="attributes-color" count={dust.colors.length / 3} array={dust.colors} itemSize={3} />
           </bufferGeometry>
-          <pointsMaterial size={5 * scale} map={sprite} vertexColors transparent opacity={0.1} depthWrite={false} blending={AdditiveBlending} />
+          <pointsMaterial size={5 * Math.min(scale, 2)} map={sprite} vertexColors transparent opacity={0.1} depthWrite={false} blending={AdditiveBlending} />
         </points>
-        <sprite scale={[5, 5, 1]} raycast={() => null}>
+        <sprite scale={[5 / Math.max(1, scale), 5 / Math.max(1, scale), 1]} raycast={() => null}>
           <spriteMaterial map={sprite} color="#ffcf85" transparent opacity={0.55} depthWrite={false} blending={AdditiveBlending} />
         </sprite>
         <mesh
@@ -230,7 +243,7 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
           }}
           onPointerOut={() => onHover(null, 0, 0)}
         >
-          <sphereGeometry args={[0.26, 20, 16]} />
+          <sphereGeometry args={[0.26, 64, 48]} />
           <meshBasicMaterial color="#fff0a4" />
         </mesh>
 
@@ -250,7 +263,7 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
             <bufferAttribute attach="attributes-position" args={[positions, 3]} />
             <bufferAttribute attach="attributes-color" args={[colors, 3]} />
           </bufferGeometry>
-          <pointsMaterial size={3.8 * scale} map={sprite} vertexColors toneMapped={false} transparent depthWrite={false} blending={AdditiveBlending} alphaTest={0.01} />
+          <pointsMaterial size={markerSize} map={marker} vertexColors toneMapped={false} transparent depthWrite={false} alphaTest={0.08} />
         </points>}
 
         {highlight !== null && (
@@ -258,7 +271,7 @@ function Galaxy({ points, selectedId, onSelect, onHover, scale, panning, isPanni
             <bufferGeometry>
               <bufferAttribute attach="attributes-position" count={1} array={positions.slice(highlight * 3, highlight * 3 + 3)} itemSize={3} />
             </bufferGeometry>
-            <pointsMaterial size={7 * scale} map={sprite} color="#ffffff" transparent depthWrite={false} blending={AdditiveBlending} />
+            <pointsMaterial size={markerSize + 4} map={sprite} color="#ffffff" transparent depthWrite={false} blending={AdditiveBlending} />
           </points>
         )}
       </group>
@@ -284,7 +297,7 @@ export function GalaxyScene(props: SceneProps) {
         className="galaxy-map-view"
         orthographic
         camera={{ position: [0, 0, 26], near: 0.1, far: 100 }}
-        dpr={[1, 1.5]}
+        dpr={scale < 1 ? 1 : scale < 2.5 ? [1, 1.5] : [1.25, 2]}
       >
         <MapControls zoomMap={zoomMap} onScale={setScale} onPan={onPan} />
         <SkyStars fixed subtle />

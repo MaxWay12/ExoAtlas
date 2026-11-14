@@ -172,7 +172,7 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 
 @media (min-width: 1120px) {
   .scene-panel { min-height: max(660px, 100vh); padding-top: 0; }
-  .dashboard-charts { position: absolute; inset: 155px 24px 84px; padding: 0; grid-template-columns: repeat(2, clamp(215px, 21%, 280px)); justify-content: space-between; pointer-events: none; }
+  .dashboard-charts { position: absolute; inset: 155px 24px 84px; padding: 0; grid-template-columns: repeat(2, clamp(245px, 24%, 340px)); justify-content: space-between; pointer-events: none; }
   .dashboard-charts .chart { pointer-events: auto; }
   .dashboard-charts .chart:first-child { align-self: start; }
   .dashboard-charts .chart:last-child { align-self: end; }
@@ -226,12 +226,12 @@ body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background
 .galaxy .popup { left: auto; right: 24px; top: 96px; transform: none; }
 .galaxy .planet-picker { bottom: 24px; }
 .home .planet-picker button { min-height: 44px; padding: 8px 14px; font-size: 16px; }
-.home .dashboard-charts .chart { padding: 18px; }
-.home .dashboard-charts .chart h2 { font-size: 18px; }
-.home .dashboard-charts .chart svg { max-height: 230px; }
+.home .dashboard-charts .chart { padding: 22px; }
+.home .dashboard-charts .chart h2 { font-size: 20px; }
+.home .dashboard-charts .chart svg { max-height: 250px; }
 .home .dashboard-charts .chart svg text { font-size: 11px; }
 @media (max-width: 1119px) {
-  .home .dashboard-charts .chart { min-height: 130px; }
+  .home .dashboard-charts .chart { min-height: 140px; }
   .home .dashboard-charts .chart > p { font-size: 16px; }
 }
 @media (max-width: 1119px) {

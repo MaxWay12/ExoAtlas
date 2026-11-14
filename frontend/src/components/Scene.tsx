@@ -110,7 +110,7 @@ function FitOrbit() {
     const aspect = size.width / size.height
     const halfAngle = MathUtils.degToRad(camera.fov / 2)
     const horizontalExtent = A + 1
-    const chartWidth = Math.min(280, Math.max(215, (size.width - 48) * 0.21))
+    const chartWidth = Math.min(340, Math.max(245, (size.width - 48) * 0.24))
     const orbitAspect = window.matchMedia('(min-width: 1120px)').matches
       ? (size.width - 2 * (chartWidth + 36)) / size.height
       : aspect

@@ -100,14 +100,20 @@ export function GalaxyMap({ ranking }: { ranking: Ranking | null }) {
           <div className="galaxy-tip" ref={tip} hidden={!tooltip}>
             {tooltip}
           </div>
-          {points.length > 0 && <p className="galaxy-hint">Перетаскивайте карту, меняйте масштаб колёсиком или кнопками. Нажмите на точку, чтобы открыть систему.</p>}
+          <p className="galaxy-hint">
+            <span className="galaxy-mouse-hint">Перетаскивайте карту, меняйте масштаб колёсиком или кнопками. </span>
+            <span className="galaxy-touch-hint">Один палец прокручивает страницу, два пальца двигают и приближают карту. </span>
+            Нажмите на точку, чтобы открыть систему.
+          </p>
         </div>
       )}
 
       {systemId !== null && (
         <div className="galaxy-canvas">
-          {checked && <SystemScene looks={looks} star={star} selectedId={planetId} onSelect={setPlanetId} />}
           <button className="galaxy-back" onClick={back}>← К карте систем</button>
+          {checked && <div className="system-viewport">
+            <SystemScene looks={looks} star={star} selectedId={planetId} onSelect={setPlanetId} />
+          </div>}
           {checked && (
             <div className="planet-picker" aria-label="Выбрать планету">
               {looks.map(({ planet: p, color }) => (

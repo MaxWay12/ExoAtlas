@@ -37,7 +37,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    const navigate = () => { setPage(currentPage()); close() }
+    const navigate = () => { setPage(currentPage()); close(); window.scrollTo(0, 0) }
     const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') close() }
     window.addEventListener('hashchange', navigate)
     window.addEventListener('keydown', onKey)

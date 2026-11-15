@@ -107,6 +107,46 @@ function MapControls({ zoomMap, onScale, onPan }: {
     const el = gl.domElement
     let drag: { id: number; x: number; y: number; moved: boolean } | undefined
     let suppressClick = false
+    let pinch: { distance: number; x: number; y: number } | undefined
+
+    const pan = (dx: number, dy: number) => {
+      view.position.x -= dx / view.zoom
+      view.position.y += dy / view.zoom
+      const { width, height } = get().size
+      clampCenter(view, width, height)
+    }
+    const updatePinch = (event: TouchEvent) => {
+      if (event.targetTouches.length !== 2 || !event.cancelable) return
+      event.preventDefault()
+      const [a, b] = Array.from(event.targetTouches)
+      const current = {
+        distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+        x: (a.clientX + b.clientX) / 2,
+        y: (a.clientY + b.clientY) / 2,
+      }
+      if (pinch && pinch.distance > 0 && current.distance > 0) {
+        const rect = el.getBoundingClientRect()
+        pan(current.x - pinch.x, current.y - pinch.y)
+        zoomMap.current?.(
+          current.distance / pinch.distance,
+          current.x - rect.left - rect.width / 2,
+          rect.top + rect.height / 2 - current.y,
+        )
+      } else {
+        suppressClick = true
+        onPan(true)
+      }
+      pinch = current
+    }
+    const touchStart = (event: TouchEvent) => {
+      if (event.targetTouches.length === 1) suppressClick = false
+      updatePinch(event)
+    }
+    const touchEnd = (event: TouchEvent) => {
+      if (!pinch || event.targetTouches.length === 2) return
+      pinch = undefined
+      onPan(false)
+    }
 
     const wheel = (event: WheelEvent) => {
       event.preventDefault()
@@ -119,7 +159,7 @@ function MapControls({ zoomMap, onScale, onPan }: {
       )
     }
     const down = (event: PointerEvent) => {
-      if (!event.isPrimary || event.button !== 0) return
+      if (event.pointerType === 'touch' || !event.isPrimary || event.button !== 0) return
       suppressClick = false
       drag = { id: event.pointerId, x: event.clientX, y: event.clientY, moved: false }
     }
@@ -137,10 +177,7 @@ function MapControls({ zoomMap, onScale, onPan }: {
       }
       drag.x = event.clientX
       drag.y = event.clientY
-      view.position.x -= dx / view.zoom
-      view.position.y += dy / view.zoom
-      const { width, height } = get().size
-      clampCenter(view, width, height)
+      pan(dx, dy)
     }
     const end = (event: PointerEvent) => {
       if (drag?.id !== event.pointerId) return
@@ -158,6 +195,10 @@ function MapControls({ zoomMap, onScale, onPan }: {
     }
 
     el.addEventListener('wheel', wheel, { passive: false })
+    el.addEventListener('touchstart', touchStart, { passive: false })
+    el.addEventListener('touchmove', updatePinch, { passive: false })
+    el.addEventListener('touchend', touchEnd)
+    el.addEventListener('touchcancel', touchEnd)
     el.addEventListener('pointerdown', down)
     el.addEventListener('pointermove', move)
     el.addEventListener('pointerup', end)
@@ -167,6 +208,10 @@ function MapControls({ zoomMap, onScale, onPan }: {
     el.addEventListener('click', click, true)
     return () => {
       el.removeEventListener('wheel', wheel)
+      el.removeEventListener('touchstart', touchStart)
+      el.removeEventListener('touchmove', updatePinch)
+      el.removeEventListener('touchend', touchEnd)
+      el.removeEventListener('touchcancel', touchEnd)
       el.removeEventListener('pointerdown', down)
       el.removeEventListener('pointermove', move)
       el.removeEventListener('pointerup', end)
@@ -303,9 +348,10 @@ export function GalaxyScene(props: SceneProps) {
         <SkyStars fixed subtle />
         <Galaxy {...props} scale={scale} panning={panning} isPanning={isPanning} />
       </Canvas>
-      <div className="galaxy-zoom" aria-label="Масштаб карты" role="group">
-        <button type="button" onClick={() => props.onSelect(SOLAR_ID)}>{SOLAR_NAME}</button>
+      <div className="galaxy-zoom" aria-label="Управление картой" role="group">
+        <button className="galaxy-solar" type="button" onClick={() => props.onSelect(SOLAR_ID)}>{SOLAR_NAME}</button>
         <button type="button" aria-label="Уменьшить масштаб" disabled={scale <= MIN_SCALE} onClick={() => zoomMap.current?.(1 / 1.3)}>−</button>
+        <output aria-label="Текущий масштаб" aria-live="off">{Number(scale.toFixed(1))}×</output>
         <button type="button" aria-label="Увеличить масштаб" disabled={scale >= MAX_SCALE} onClick={() => zoomMap.current?.(1.3)}>+</button>
       </div>
     </>
